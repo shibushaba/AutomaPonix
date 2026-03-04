@@ -1,0 +1,732 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate materials for my next LinkedIn post.\n\nHere are the ideas that we've already used: {{ $json.mergedText }}.\n\nCome up with a new, super valuable and concrete post, and prepare all the needed materials for it:\n- idea\n- title\n- text\n- image description\n\nUse the least used bucket of content (out of my 4 buckets).\n\nBegin:",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=ROLE\nYou are a LinkedIn content strategist for automa.ponix. \nCreate viral AI-automation posts.\n\nOUTPUT FIELDS\n1) name\n2) idea\n3) title\n4) text\n5) image_prompt\n\nFinal output MUST be ONLY valid JSON.\n\nAUDIENCE\nFounders, B2B/B2C owners, tech leaders interested in AI automation.\n\nCONTENT BUCKETS\n1) Timeless principle\n2) Case study\n3) Growth hack\n4) Controversial idea\n\nPOST RULES\n• 200–300 words\n• strong hook\n• engaging story\n• clear business lesson\n\nFINAL OUTPUT FORMAT\n{\n\"name\": \"...\",\n\"idea\": \"...\",\n\"title\": \"...\",\n\"text\": \"...\",\n\"image_prompt\": \"...\"\n}\n\nCRITICAL RULES\n• DO NOT output any conversational text.\n• DO NOT wrap in markdown code blocks.\n• Output ONLY the pure JSON object representing your drafted post and image prompt.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        9984,
+        2736
+      ],
+      "id": "b3a2ca5c-ee05-4ad6-a518-f5456cb9b11c",
+      "name": "Idea Generator2",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"name\": \"name\",\n    \"idea\": \"idea\",\n    \"title\": \"title\",\n    \"text\": \"text\",\n    \"image\": \"image\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        10128,
+        2928
+      ],
+      "id": "0ea05b30-add7-425f-a9ac-e64a4ad99920",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        9456,
+        2736
+      ],
+      "id": "1e6ab620-adf6-44dc-95bd-d35023b1f8c9",
+      "name": "Schedule2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all incoming items\nconst items = $input.all();\n\n// Extract the text field from each item\nconst texts = items.map(item => item.json.idea);\n\n// Concatenate them (adjust the separator as needed)\nconst concatenated = texts.join(\", \");\n\n// Return a single item with the concatenated text\nreturn [{ json: { mergedText: concatenated } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        9808,
+        2736
+      ],
+      "id": "3ed0287a-a89f-4109-88b4-212e664f7d87",
+      "name": "Join Ideas2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        9952,
+        3136
+      ],
+      "id": "c18d03ed-50cd-42ca-b0d2-bd2e73f96fa1",
+      "name": "Pick One2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI",
+          "mode": "list",
+          "cachedResultName": "AI Post Content Machine",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        9632,
+        2736
+      ],
+      "id": "c164d751-ee9b-4175-8307-ba97c38c2093",
+      "name": "Get Past Ideas2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2dvuvMpwQe7b0sGm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI",
+          "mode": "list",
+          "cachedResultName": "AI Post Content Machine",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $('Idea Generator2').item.json.output.name }}",
+            "idea": "={{ $('Idea Generator2').item.json.output.idea }}",
+            "text": "={{ $('Idea Generator2').item.json.output.text }}",
+            "image": "={{ $('Upload file').item.json.id }}",
+            "status": "review"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "image",
+              "displayName": "image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        11248,
+        2736
+      ],
+      "id": "25de2f91-5abd-4f25-97f0-3c2e4fb1d3c2",
+      "name": "Save Post2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2dvuvMpwQe7b0sGm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 16
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        9600,
+        3136
+      ],
+      "id": "a71d301d-155e-4849-b805-1fc77618882c",
+      "name": "Schedule 2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI",
+          "mode": "list",
+          "cachedResultName": "AI Post Content Machine",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        9776,
+        3136
+      ],
+      "id": "cf0482a7-7f5c-4a04-bf44-fb3ac14eed29",
+      "name": "Get Ready Posts2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2dvuvMpwQe7b0sGm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.image }}"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        10160,
+        3136
+      ],
+      "id": "42108867-05ac-4a2d-9b19-9972d7855430",
+      "name": "Download Image2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "lLm1Mzt83crF4rZe",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "postAs": "organization",
+        "organization": "112679148",
+        "text": "={{ $json.text }}",
+        "shareMediaCategory": "IMAGE",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        10352,
+        3136
+      ],
+      "id": "267289a2-feda-4030-bbea-e5a021d0a3d5",
+      "name": "Publish Post2",
+      "credentials": {
+        "linkedInOAuth2Api": {
+          "id": "HmFKvKj2intR8dI3",
+          "name": "LinkedIn account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1-F3ZioIs3oWOKMyDPMuquaH-qiuaZs6qdZXP-yNeRbs",
+          "mode": "list",
+          "cachedResultName": "AI Posts Content Machine",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-F3ZioIs3oWOKMyDPMuquaH-qiuaZs6qdZXP-yNeRbs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Posts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1-F3ZioIs3oWOKMyDPMuquaH-qiuaZs6qdZXP-yNeRbs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $('Pick One2').item.json.name }}",
+            "status": "posted"
+          },
+          "matchingColumns": [
+            "name"
+          ],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "idea",
+              "displayName": "idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "text",
+              "displayName": "text",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "image",
+              "displayName": "image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        10560,
+        3136
+      ],
+      "id": "bb838297-6775-4fd4-8fad-727cc896ff4c",
+      "name": "Update Status2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2dvuvMpwQe7b0sGm",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        9984,
+        2928
+      ],
+      "id": "081d92e3-8231-498d-abd4-596557a5dbe2",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "M8x78S7HaYYge2Lz",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "7874256891",
+        "message": "==Here is an image prompt for nanobanana.ai for our next post:\n\n{{ $json.output.image }}\n\nPlease generate it on nanobanana.ai and upload the image here.\n",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload the generated image here",
+              "fieldType": "file",
+              "multipleFiles": false,
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "d4b8db2f-0cc8-4457-a00b-578e44c9d698",
+      "name": "Telegram Ask Image1",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [
+        10336,
+        2736
+      ],
+      "webhookId": "02a2cfa3-98a2-4ab5-b545-347d14dc5dcc",
+      "credentials": {
+        "telegramApi": {
+          "id": "hqGrhFBBirW971bD",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "7874256891",
+        "message": "==Great! Here is the drafted post:\n\nTitle: {{ $('Idea Generator2').item.json.output.title }}\n\nText: {{ $('Idea Generator2').item.json.output.text }}\n\nPlease choose an option below:\n",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "4ae38c33-c312-4f8e-950f-aabfd4d2742a",
+      "name": "Telegram Ask Approval1",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [
+        10752,
+        2736
+      ],
+      "webhookId": "2ecbc646-4557-4e4f-aa9e-76e9c0ce68fe",
+      "credentials": {
+        "telegramApi": {
+          "id": "hqGrhFBBirW971bD",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.data.approved }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "55a6c562-6cbe-4488-9874-b755e699c13d",
+      "name": "Check Approval1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        10960,
+        2736
+      ]
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=Upload_the_generated_image_here",
+        "name": "={{ $('Idea Generator2').item.json.output.name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "12ZXS34oLW4mOnAeQHPUZ5eIk1Z9fui00",
+          "mode": "list",
+          "cachedResultName": "Linkedin-PostImage",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/12ZXS34oLW4mOnAeQHPUZ5eIk1Z9fui00"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        10544,
+        2736
+      ],
+      "id": "bef37987-7a47-488b-a823-04cb731b42b5",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "lLm1Mzt83crF4rZe",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Idea Generator2": {
+      "main": [
+        [
+          {
+            "node": "Telegram Ask Image1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Idea Generator2",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule2": {
+      "main": [
+        [
+          {
+            "node": "Get Past Ideas2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Join Ideas2": {
+      "main": [
+        [
+          {
+            "node": "Idea Generator2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick One2": {
+      "main": [
+        [
+          {
+            "node": "Download Image2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Past Ideas2": {
+      "main": [
+        [
+          {
+            "node": "Join Ideas2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule 2": {
+      "main": [
+        [
+          {
+            "node": "Get Ready Posts2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Ready Posts2": {
+      "main": [
+        [
+          {
+            "node": "Pick One2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image2": {
+      "main": [
+        [
+          {
+            "node": "Publish Post2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish Post2": {
+      "main": [
+        [
+          {
+            "node": "Update Status2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Idea Generator2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Ask Image1": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Ask Approval1": {
+      "main": [
+        [
+          {
+            "node": "Check Approval1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Approval1": {
+      "main": [
+        [
+          {
+            "node": "Save Post2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Idea Generator2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Telegram Ask Approval1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "812e57160b6cfa0488283afdc6a904b27f91c8dd7755e053008327f19ff2ef3d"
+  }
+}
