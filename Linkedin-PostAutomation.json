@@ -2,27 +2,40 @@
   "nodes": [
     {
       "parameters": {
+        "jsCode": "const item = $input.first().json;\n// Collect all text from the new row (ignoring common metadata)\nconst keys = Object.keys(item).filter(k => k !== 'row_number' && k !== 'Timestamp');\nconst userIdea = keys.map(k => item[k]).join(\" \").trim();\n\nreturn [{\n  json: {\n    mergedText: \"\",\n    userIdea: userIdea\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        14928,
+        5248
+      ],
+      "id": "88c80bee-dd2f-4ec4-895a-4a630ac258ef",
+      "name": "Format Sheets Idea"
+    },
+    {
+      "parameters": {
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        14224,
-        4560
+        15104,
+        5616
       ],
-      "id": "b3784cc9-338a-4bcc-a4fa-482bf1d46cef",
-      "name": "Google Gemini Chat Model",
+      "id": "7c0d3a29-db1e-47a6-a038-f464185d32d3",
+      "name": "Google Gemini Chat Model1",
       "credentials": {
         "googlePalmApi": {
-          "id": "M8x78S7HaYYge2Lz",
-          "name": "Google Gemini(PaLM) Api account 3"
+          "id": "8JwcBNO8t0Rbq5Id",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
     {
       "parameters": {
         "inputDataFieldName": "=Upload_the_generated_image_here",
-        "name": "={{ $('Idea Generator2').item.json.output.name }}",
+        "name": "={{ $('Idea Generator').item.json.output.name }}",
         "driveId": {
           "__rl": true,
           "mode": "list",
@@ -40,11 +53,11 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        15360,
-        4368
+        16240,
+        5424
       ],
-      "id": "b1f11b92-b159-41fc-92d7-c84ccaeae289",
-      "name": "Upload file",
+      "id": "f558ea17-f100-4a05-90ed-bcb844fd7b91",
+      "name": "Upload file1",
       "credentials": {
         "googleDriveOAuth2Api": {
           "id": "lLm1Mzt83crF4rZe",
@@ -63,20 +76,20 @@
           ]
         }
       },
-      "id": "c0526be2-d978-42a8-ab1d-0d0342c7df42",
-      "name": "Check Approval1",
+      "id": "9133e5db-654b-48d0-9f8a-dbe3bdf02ef4",
+      "name": "Check Approval",
       "type": "n8n-nodes-base.if",
       "typeVersion": 1,
       "position": [
-        15760,
-        4368
+        16640,
+        5424
       ]
     },
     {
       "parameters": {
         "operation": "sendAndWait",
         "chatId": "7874256891",
-        "message": "=Great! Here is the drafted post:\n\n**Title:**\n\n{{ $('Idea Generator2').item.json.output.title }}\n\n**Text:**\n\n{{ $('Idea Generator2').item.json.output.text }}\n\n\nPlease choose an option below: ",
+        "message": "=Great! Here is the drafted post:\n\n**Title:**\n\n{{ $('Idea Generator').item.json.output.title }}\n\n**Text:**\n\n{{ $('Idea Generator').item.json.output.text }}\n\n\nPlease choose an option below: ",
         "approvalOptions": {
           "values": {
             "approvalType": "double"
@@ -86,13 +99,13 @@
           "appendAttribution": false
         }
       },
-      "id": "2b0c29f4-d00c-410f-8103-184e74fc6a9e",
-      "name": "Telegram Ask Approval1",
+      "id": "b14d47f6-f210-44da-a9db-f9c27600826e",
+      "name": "Telegram Ask Approval",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.1,
       "position": [
-        15568,
-        4368
+        16448,
+        5424
       ],
       "webhookId": "2ecbc646-4557-4e4f-aa9e-76e9c0ce68fe",
       "credentials": {
@@ -122,13 +135,13 @@
           "appendAttribution": false
         }
       },
-      "id": "55ce91dd-261e-4f51-b6e5-75a6d8c34b66",
-      "name": "Telegram Ask Image1",
+      "id": "268eaba6-5450-4e2f-8345-a62c38bd00dc",
+      "name": "Telegram Ask Image",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.1,
       "position": [
-        14544,
-        4368
+        15424,
+        5424
       ],
       "webhookId": "02a2cfa3-98a2-4ab5-b545-347d14dc5dcc",
       "credentials": {
@@ -158,7 +171,7 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "name": "={{ $('Download Image2').item.json.name }}",
+            "name": "={{ $('Download Image').item.json.name }}",
             "status": "posted"
           },
           "matchingColumns": [
@@ -244,11 +257,11 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        15584,
-        4640
+        16464,
+        5696
       ],
-      "id": "190c6ee3-a80c-4921-a859-48151ea88277",
-      "name": "Update Status2",
+      "id": "f20eeae3-09d1-4c26-8dfe-62f0ce99973e",
+      "name": "Update Status",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "2dvuvMpwQe7b0sGm",
@@ -269,11 +282,11 @@
       "type": "n8n-nodes-base.linkedIn",
       "typeVersion": 1,
       "position": [
-        15376,
-        4640
+        16256,
+        5696
       ],
-      "id": "59ea8f24-a572-4a24-bbc5-c2f36beaf021",
-      "name": "Publish Post2",
+      "id": "d68cdc71-31b4-489e-b5ad-4bb58fc4eef5",
+      "name": "Publish Post",
       "credentials": {
         "linkedInOAuth2Api": {
           "id": "HmFKvKj2intR8dI3",
@@ -294,11 +307,11 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        15184,
-        4640
+        16064,
+        5696
       ],
-      "id": "ad80ab06-20f7-4a28-9985-70e085e1dd7b",
-      "name": "Download Image2",
+      "id": "980f9819-b4d8-46a8-9782-52869a39f4a4",
+      "name": "Download Image",
       "credentials": {
         "googleDriveOAuth2Api": {
           "id": "lLm1Mzt83crF4rZe",
@@ -335,11 +348,11 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        14800,
-        4640
+        15680,
+        5696
       ],
-      "id": "fd08c375-4ba4-4964-87df-8fea78d2702e",
-      "name": "Get Ready Posts2",
+      "id": "7feae3b3-d678-466e-9314-9dd3edd70e4a",
+      "name": "Get Ready Posts",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "2dvuvMpwQe7b0sGm",
@@ -361,11 +374,11 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        14624,
-        4640
+        15504,
+        5696
       ],
-      "id": "785ccfa0-660f-4c39-9f8f-ce78ef3ef490",
-      "name": "Schedule 2"
+      "id": "10505215-c301-414f-b0c1-7d25052f3422",
+      "name": "Schedule "
     },
     {
       "parameters": {
@@ -387,12 +400,12 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "name": "={{ $('Idea Generator2').item.json.output.name }}",
-            "idea": "={{ $('Idea Generator2').item.json.output.idea }}",
-            "text": "={{ $('Idea Generator2').item.json.output.text }}",
-            "image": "={{ $('Upload file').item.json.id }}",
+            "name": "={{ $('Idea Generator').item.json.output.name }}",
+            "idea": "={{ $('Idea Generator').item.json.output.idea }}",
+            "text": "={{ $('Idea Generator').item.json.output.text }}",
+            "image": "={{ $('Upload file1').item.json.id }}",
             "status": "review",
-            "title ": "={{ $('Idea Generator2').item.json.output.title }}"
+            "title ": "={{ $('Idea Generator').item.json.output.title }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -460,11 +473,11 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        16000,
-        4368
+        16880,
+        5424
       ],
-      "id": "6883dd67-1c4a-4620-b0a0-65afbece04f9",
-      "name": "Save Post2",
+      "id": "c2e960cb-5cc3-4a43-a467-f7665b64d461",
+      "name": "Save Post",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "2dvuvMpwQe7b0sGm",
@@ -493,11 +506,11 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        13872,
-        4368
+        14752,
+        5424
       ],
-      "id": "5ef59a3a-0791-4a8b-89c0-8642e675baeb",
-      "name": "Get Past Ideas2",
+      "id": "25749cc7-6f6a-4c27-8394-f797524fc7c1",
+      "name": "Get Past Ideas",
       "alwaysOutputData": true,
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -511,24 +524,24 @@
       "type": "n8n-nodes-base.limit",
       "typeVersion": 1,
       "position": [
-        14976,
-        4640
+        15856,
+        5696
       ],
-      "id": "6bcc5153-59cc-445f-85db-36a51b1795a2",
-      "name": "Pick One2"
+      "id": "be28f6eb-7b11-46b2-afff-55f8021dd6ee",
+      "name": "Pick One"
     },
     {
       "parameters": {
-        "jsCode": "// Get all incoming items\nconst items = $input.all();\n\n// Extract the text field from each item\nconst texts = items.map(item => item.json.idea);\n\n// Concatenate them (adjust the separator as needed)\nconst concatenated = texts.join(\", \");\n\n// Return a single item with the concatenated text\nreturn [{ json: { mergedText: concatenated } }];"
+        "jsCode": "// Get all incoming items\nconst items = $input.all();\n\n// Extract the text field from each item\nconst texts = items.map(item => item.json.idea || '');\n\n// Concatenate them (adjust the separator as needed)\nconst concatenated = texts.join(\", \");\n\n// Return a single item with the concatenated text\nreturn [{ json: { mergedText: concatenated, userIdea: \"\" } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        14048,
-        4368
+        14928,
+        5424
       ],
-      "id": "70f09d02-7939-4ea9-a254-f4a19d16e41f",
-      "name": "Join Ideas2"
+      "id": "599d39d9-d689-4823-bf42-2ae4113d4d4f",
+      "name": "Join Ideas"
     },
     {
       "parameters": {
@@ -543,11 +556,11 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        13696,
-        4368
+        14576,
+        5424
       ],
-      "id": "be8711f2-7ee8-4bb9-b320-1504feaa1c47",
-      "name": "Schedule2"
+      "id": "0bd99427-b4ef-4a7b-8638-bfedb2b9979e",
+      "name": "Schedule"
     },
     {
       "parameters": {
@@ -556,42 +569,42 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
       "position": [
-        14368,
-        4560
+        15248,
+        5616
       ],
-      "id": "7efcdfe9-1d03-4209-952b-ec1d4e06dace",
-      "name": "Structured Output Parser2"
+      "id": "7382ddb9-1ac7-4035-a236-00d615dd7686",
+      "name": "Structured Output Parser"
     },
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Generate materials for my next LinkedIn post.\n\nHere are the ideas that we've already used: {{ $json.mergedText }}.\n\nCome up with a new, super valuable and concrete post, and prepare all the needed materials for it:\n- idea\n- title\n- text\n- image description\n\nUse the least used bucket of content (out of my 4 buckets).\n\nBegin:",
+        "text": "=Generate materials for my next LinkedIn post.\n\n{{ $json.userIdea ? \"Here is the exact idea you MUST base the post on:\\n\" + $json.userIdea : \"Here are the ideas that we've already used:\\n\" + $json.mergedText + \"\\n\\nCome up with a new, super valuable and concrete post.\" }}\n\nPrepare all the needed materials for it:\n- idea (If a specific idea was provided, refine it into a polished version. Otherwise, write your new idea)\n- title\n- text\n- image description\n\nUse the least used bucket of content (out of my 4 buckets).\n\nBegin:",
         "hasOutputParser": true,
         "options": {
-          "systemMessage": "=ROLE\nYou are a LinkedIn content strategist for Automa.Ponix.\nCreate viral AI automation posts.\n\nOUTPUT FIELDS\n\n1. name\n2. idea\n3. title\n4. text\n5. image_prompt\n\nFinal output MUST be ONLY valid JSON.\n\nAUDIENCE\nFounders, B2B and B2C business owners, and tech leaders interested in AI automation.\n\nCONTENT BUCKETS\nChoose one for each post:\n\n1. Timeless principle\n2. Case study\n3. Growth hack\n4. Controversial idea\n\nWRITING STYLE RULES\n• The post MUST be written like a short story\n• Story driven and engaging\n• Slight humorous tone\n• Natural conversational flow\n• Feels like a founder sharing a real observation\n• No emojis\n• Do not use hyphens in the post text\n\nPOST STRUCTURE\n• 200 to 300 words\n• Strong hook in the first line\n• Narrative storytelling format\n• Build curiosity in the middle\n• End with a clear business insight about AI automation\n\nIMAGE PROMPT REQUIREMENTS\n\nThe image prompt must:\n\n• Want to reflect the post\n• cinematic\n• Black & White\n• 4:5 ratio\n• Want to get the concept illustration related to the LinkedIn post story\n\nFINAL OUTPUT FORMAT\n\n{\n\"name\": \"...\",\n\"idea\": \"...\",\n\"title\": \"...\",\n\"text\": \"...\",\n\"image_prompt\": \"...\"\n}\n\nCRITICAL RULES\n• DO NOT output conversational text\n• DO NOT wrap the output in markdown\n• Output ONLY the pure JSON object representing the drafted post and image prompt\n"
+          "systemMessage": "=ROLE\nYou are a LinkedIn content strategist for Automa.Ponix.\nCreate viral AI automation posts.\n\nOUTPUT FIELDS\n\n1. name\n2. idea\n3. title\n4. text\n5. image_prompt\n\nFinal output MUST be ONLY valid JSON.\n\nAUDIENCE\nFounders, B2B and B2C business owners, and tech leaders interested in AI automation.\n\nCONTENT BUCKETS\nChoose one for each post:\n\n1. Timeless principle\n2. Case study\n3. Growth hack\n4. Controversial idea\n\nWRITING STYLE RULES\n• The post MUST be written like a short story\n• Story driven and engaging\n• Slight humorous tone\n• Natural conversational flow\n• Feels like a founder sharing a real observation\n• No emojis\n• Do not use hyphens in the post text\n\nPOST STRUCTURE\n• 200 to 300 words\n• Strong hook in the first line\n• Narrative storytelling format\n• Build curiosity in the middle\n• End with a clear business insight about AI automation and ask a qustion\n• Add 5 relevent hashtag suitable for this post at the very end of the post\n\nIMAGE PROMPT REQUIREMENTS\n\nThe image prompt must:\n\n• Want to reflect the post\n• cinematic\n• Black & White\n• 4:5 ratio\n• Want to get the concept illustration related to the LinkedIn post story\n\nFINAL OUTPUT FORMAT\n\n{\n\"name\": \"...\",\n\"idea\": \"...\",\n\"title\": \"...\",\n\"text\": \"...\",\n\"image_prompt\": \"...\"\n}\n\nCRITICAL RULES\n• DO NOT output conversational text\n• DO NOT wrap the output in markdown\n• Output ONLY the pure JSON object representing the drafted post and image prompt\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.7,
       "position": [
-        14224,
-        4368
+        15104,
+        5424
       ],
-      "id": "5aad9132-6648-44ff-b5a7-324770dc3cf2",
-      "name": "Idea Generator2",
+      "id": "9ba80224-a8c7-499d-b09c-9b37c44d5bd0",
+      "name": "Idea Generator",
       "retryOnFail": true
     },
     {
       "parameters": {
         "jsCode": "const b64 = 'iVBORw0KGgoAAAANSUhEUgAABDgAAAVGCAYAAAB7TwuKAAA6dUlEQVR4nO3dCZBsWUHn4dPagOzTrIKsj0VQGGFQFgUVsAWVTQU8gYLsICIiCCPBKiDMTGOoyC4iKMsBnJFFHRUEBSSQXZDVoZFNQISnSNuASk8c4hSRVGflvVlZr6r+r74voqNfvcrKzMq8t17d3z33nFOOHz9+TgEAAAAI9g0H/QQAAAAANiVwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIN6p637BsWPHTswzAQAAABjOPPPMsg4jOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOKdetBP4MwzzzzopwAAAABs6NixY+UgGcEBAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPFOLYfcaaeddspBPwcAAAA46o4fP35OOcSM4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeKce9BMAOBm11i5SSvlEKeVCC3/9n6WUK9VaP77B/bZSyk9s+PT+utZ6wx3u/zGllEfv4j4/W0p5QynltuXg/M9a6y+t+0WttUuXUn6wlNJfk2uXUq5YSrlYKeX8pZR/L6X8aymlv2f/r5TyllLKa0opb6+1nrOLx/qnUsrFy+48tdZ6/11+bX/sJ5VSHrzLL/+hWuuf7PaxT+Q+sanW2l1LKb+zR3f35VLKWeO/T5ZSPlhKeV8p5dWllDfvZps56O22tXa7UsofrPn0nl1rvdcaj/GLpZQzyvreU2u9Vmvt8aWUh5fNfbbWeonW2sv2+GfZ82qtfTvb5OfsQ2qtfR8GYAWBA+DEuNu2A7nuG0sp9ymlPHKD++0HiF8qpZxvl1//+VLK3098vh8AnbLm/X66BGmtnaeUcodSyr1LKTdZMaKxv2ffVEq5ZCnluuNruo+31p5eSnlGrfVzazz0h0spF93lv793aq09uNba3//duP4uvuYr40C9bxeHdZ/Y1PFSyr+M92VT5x3/nVZKuVwp5bvG3/cD8E+31p5cSvnNWmuPDynbbX/vvzjub657ttbeXWvt3+8cnxtxqL92c5099qfuH0dUumDZvX8rpfzd+PNHx3bR38dNnD32n35/239efma8P1POGV/fv0cAJpxy/PjxtUr+sWPHyl4688wzV37+tNNOW/eXbIAD1VrrP7c+UEq52pJPf6qUcoVa679vcP/nGQerPzdzNEc/QOlnDP+o1vrBGffff6n//lLKj5ZS7rhDTOln3p9fSnlRKeVNtdZ/WXHW8739DOYIK/1A5gullP/oIxImDrpfMs7q9u/3ImPkw9XGwd1ldzuCo7VWSym/0v9JW/LpT4/n+s5SysfGAde3llJuU0q5xZLw0w+KfrsfoPfXYOqxx+OfOg58//suzhLXWuuL1/ya/pgXGAdscw8g+2iNXyulvLHW2t+vQ71P7NHzu3op5fRSys+XUq468SV9P/rJ8ecLjQPV/p7evpRy5Ymv7Qe8t6m1vnXN53hg221r7bzjtXnAGDUyR9/Hb1lr/fOZ318PKN87fub81A4/d3rc69Hkd8foja/9Dtta67Hn20opNyul/Ox4P6f00TWPK6W8rtb6iSXP6dvHz9gHrBnAnjBe3w+vGjHTWus/036slPK0JdHzrLEP/natdVWUBthXxyf6wX73gu0EDoA91lq7ZSnl/+71QeoOj/WU8cv8KvertT59l/ffD/T+cklQ+PFa6//ZdttlgeNPSym3q7V+ccl992H7N1/3kozW2iXHc7rmOoFjHEz0g8AfWfLpc8bB42N3OtBurd24lPLSUso3L/l0P8N6l1prf16ztdZ6wOnD87d8YByY7uTPaq39gHUtrbV+EPW/x4dfWDKSYlE/K371Wms/QI3bJzY1YtA7Jg6Q/6bWep0lX9sPUh/Wt6OJh+mB4Xtqre+c8XwO1XbbWuth5zkzY1kPmtevtX5o7v2Px7hGKeX1pZRLbPtef3jOpVKttX6ZzttLKf1+Vo1OunKt9aMz7q//zPn9EWDmuESttV+2N0tr7QPbtrc39Vi2LLoAHLTjhzxwmGQUYO/1kRWr3G8PH6uPoJiy1pniRbXWfv3+A7f99eu3x40d9LOOd1wWNzZRa/3MODPdz3DO0lr71jEPwbKDxO5utdZHrhpFUGt9w7gsYNkB0RX6HAettXUvtXjktqHn/UB2lR9orV2+rK+fEd86A74VOnby1r2MGwewT2yk1trjwx/u8mv/o9baRwT08LhKjyi/11rrl5JEbbe11hdsi3Kr9DlBXtFau/Dc+x+P8f4lj/HaufPA1FrPHlFnlU/MiRsLP3NOn4h0i+4x83ZbAerq26LwTcUNgN0ROAD2UGvtKn1CxombfW9r7Vp79JBzDvI3HfrfJxhcnDPgj2Z+3X1qrXsxd8NO4eVRa4xCee2KSweeVWt93hqPe6dx9nfZv6mPba314emzjPizOIS/H8y+Z8WX9Mf46bKG1lo/c3/r8WEPU32i01X6XAjJ+8Re2NUcGQseM+N1vNa4nCJuuy2lPH1cajNHv2zkBeMSknX0ET2LcfSVa3795/dyO6+19tv/+LgMaMrDx343Z7TQsxf+6i92GvEGwDwCB8De6pdUzJk76GdSXvhxNv/dC381Z7j5n9Ra/6ycWE+Zei7jzPErSimXWXEQ9NB1HrTW+ld9ksYVN3lYa+2ea9zl9hVEnjtx+7uOOSPmuuvC9f3PLPvvpNsnpozLE+bMPXHbxO12/EyYNbfGcOsx0eps4yC/z9+zZWsC0AMzRob0eVam5qXpcwb9xoy7fNrCJWlvH3OziBsAGxA4APZIa63P4P+1pQAn3Lm1tmoehMPmHxb+PDUCoF+b+ZAT/Hy2zqhOTSr660vm6lj0jLmTgy6531We3FqbM8lh1y+JWPR7Y4LGnVxl7lwAI4RsHbR+YN05QjZ1ku8TU/oB65S+tGvqdtsnM90yZ6TWw8ZEqWWX8a9fJnLgxnwi2y/bW+aOrbWtkVPn0lq7/8JorA+P+UU2HTkEcOQJHAB7586llP+ycFnHKhdemBchweIv3v0sZpmYCPNvy/7ol1wsXWGgtfY9pZS7T3z97+zmQWut/Wzyqlhw/hnzMOx0331FjKm5Bqa+ry03G0HkoEZvnMz7xJQ5E0QuTqKZtt0uXuLxwJlLRT+ntXa9Mt9iOJk9586JVmv97Rnbc/f01tq5Vl9prX3/WCFlK9zcYuz3AGxI4ADYO1urmXxoHKCclTKx4przePQlYldZNQx+T9Va+5wCz9rh01MrWXxkTGa4W6+a+Pzp40BmN6YOYG8/c+LGey1MLtqX1txvJ/M+MWXO2fizTpLtto/m+LEZ81r0gPKyOfNTDF9e4+fOfrvXjHlIvqWU8quLf9FaOzZWZDl1jN661QhPAOwBgQNgD4wDgq1JEn+r1vrP/a8nvuza42xtgpVLgnW11j453im11r5c7L6ptT5xPO7XLldprX37qgkch3XmEFimz2kw5VzL3M70yolLgfrkhD+x6g5aa310wI+OD39/nWUr98IR2Cem9Mtzpnzd2nfJ222t9Y0zA9Xl+sir1tp59+LnzkEZ+9NdZzzHe7TWTh/v70XGvn3xEWz6KlNv3p9nDHA0CBwAe7sM5r8vnH3vKw0cmYkVD5m7zLjN+zZ8jHfMuM2txkoJaxnLfk4tAXz3Ga/BeQ/w8pSjvk9cdhexIX277Zdu/OaMm95oP0d6nShjIuU53+9vtdb6pVovGavKdD9ba527IhUAMwkcABtqrV1uYTWEl9Va/7H/odb6tlJK/2/qUoNzXYfPxr56xnTCBzd5gDHJ49Tkiucrpdz4BF2mcqPW2jVWfH5rctH31VpfX/aRfeKrbjLxMn1hrJRysm23DyqlvGbG7e7WWvuFkq+PHHv/jMlk39Xn2hgfP6HWehDREeCkJ3AAbK6fcf7G8eft80E8Y8aBxNwJI5mhtfZNpZTvmHHTj+zBC/rRGbf5r7u541prP9P+NxM3u9uyv2yt3WRhFY6d5ig5kY70PjFWIpla6eaMWuvxk3C77SsA3WH75Tc7OGPr8o1UY+nYu0ysfNRdfvz/+aWUR+zDUwM4kgQOgA201s63MJHjh5ZcH98vM5hazvE+YzlP9sZVZ/77thdLMvZ5JaZsrWKyG8+dsbTqVkhYtLVNfnG/Jxc96vtEa+08pZSnLQSeZfqIml85WbfbWuvnxqi2Pkpllf4avbi1drUSrNb6llLKE2fctF+u9eBa66GdWwQgncABsJk+0eMlx5+fvf0X11rrWeOM3Sp9Vv0f9EbsmcvMvN1eLDs5tWRud65lItfwgm0r2Cz7Xn9o8S/Gtf63Hx++dBxs7qcju0+01vr33SfZvfmKm71lTC75nyfxdlvGUtF9meCpg/nT+qU6YwLOZI+bcUlij19n7NPzATiSBA6AvVkGc3Eixe3mTKZ3X2/Evq5eMfcgb0ofITFlzmoRS9VaP1NKmZqIcPvlHD81luM8qMtTjsw+0SfibK1dvrV269baU8eIlR/e4eZ9SeNn90tXaq2fOpm32y1jRaVHz7hpn0vmRa212N9Lx8TAd5nx2t6ltXabfXpaAEdO7D8kAAettfadpZTrjw9fXmv99IozmX81Y9WCb9n7Z3kkTV0Lv2cHcAsh4USecX/ujG1na8REWbg85L211jeUfXSE9onvaK2dM97bj47JQvsSqRdectt+4PvSPqdFrfVetdYvHpHtdsvj+zLFM273wzMv8zi0aq3vnblS0LNaa32pWAD2mMABsPkymHPOlE+dsT51YdULNjO1QsS6Z8xXmbOU5rKz9evoIzi+ujLPimHvPzUCww0WJoc8yKVhj/I+0ee3+OtSynP6MW+/XKfW2i9Jec8R226/alyidNcZE+Z2D22t/WQJ1Vq7dinlHjNueumTYZlcgMNI4ADYhbG0a59roIzVAl498SX9DO5nJ25zzx0mjGQ9c1Zv6Pbimv9lZ+y3+7tNHmCsStHn4pizmsq9Fi5j+L2yj47YPtGXav2u8d/1SinfVkq5Qp9Potba/7thrfUetdYXj2VZj9x2u2TelT7paL/kasqzW2v9dY0yRhv98Xh/Pj9jMti+RPid9unpARwZ/ewIAOvrB5J9tYitCRG/0lrb9HW8XCnl1mOSwsPmMB5kLlVr/XhrrR84Tw0Bv2Ip5d0bPly/jylvKpvrc1n8worPX7u1dtMxYmBrctGvLUG6T47SPnF2rfWte3mHJ+l2+zW11o+01m4/wlcfdbSTvlzuy8blThFaaxceI6369tqD5B3Hazw1iuoprbXX9fd+n54qwEnPCA6ANY0zyidqAsR+Hf86vrRPQ9r7yhxbvlwOv+1Lky7TD8J3rbV2sRln0z9ZSpm6NGFSrbUf0L594mbPX3ivn3mE94lkJ9V2u12t9XWllAfMuOllSyl/sBDMDq3W2qljjpHvGH91v1rrn9Za+yVar5qxgszzUpdEBjiMBA6A9d1mDEfv2sJQ9Tn/9ckIV/mB1trV1nguq+Zm2JPlHofFSSyXThx5yLx4xm369fKbmPP1fSTF1DKZezXZaD8o7P621vrGcnT3iWQn43b7dWqtz5g5/8QNFkYkHWbPWljS+Ixa628tfO6eM+ZWuVkp5UEn8PkBHCkuUQHY/TKY3f+qtb5j7he21s4YB4M76WfyfmaNX3g/N0ZUrFpZ4erj2vBdGUs3Xnd8+J8zr6M/aP2g+e9LKVdacZt+Sccmpr6+HyA+bc37XHUm94WllCfNWEXjmUd8n0h2Mm63yzxgzFvyvcm/p7bWHrsw/83LSym/tPj5WutHW2sPLqUsRo9lntBae3Wtdc5ErACsYAQHwBpaa9copdx8fPi2dQ7kurFs59TX3K21doE1ViiYulb+hmUz37kwpP2NtdavlENuTMz5wImbXaW1tslw/9MnPv+SWusHZtzP4nwEO85NUGvt8zO8cuK+zh6XqhzZfaK1dtvW2htaa2e11v65tdbnc9haWeZQC9tuF+PDqjk1zqXW2pfO7fNxfKSEaq31OWceOT7sYeInl/1srLU+e8alKj1avrC1Nmf5XgBWEDgA1nP/NS4Z2MlTZsx3sc5Sif1a9VVu1Vrb5DKVxWvmpy4nODRqrf2M6h9O3Gxr1ZG1tNauVUr57hU3+UIp5SEz727xwP2iMyYbXaWv2tGXKT2S+0Rr7RFjQtLvGa/rRcfqHW9qrU0d2B8KJ+l2ey611s+M96avsBKltdYnvn36+PCfSim3GyvF7OTe47Vd5dvGCC0ANiBwAKw3U/5dxof9DOSLdvnivXBcWrLKz615f6uWorzgbof3t9ZuvLD0Z7+W/HdLlj5B5SdWfP5erbUL7eJ+f37i8/ettX5s5n315VW3z6Oxkz8ppXxqxeefeVT3idZaH6n0uB0+3c+Mv2jD0LefErbbPkHm3O12qXFJxl3HZTERWms3GnOl9Il1+4iNO9Va+2VFOxqff/SMu7/fiCcA7JLAATBfP2vaD+i6vxiXDKyt1vrFUkoftlwmlv38/pn31ycafdTEzR7eWvuRNX+Rv+b4RX5rKPovj8eKMQ7WTh9nWZfpS3L+6jr32VrrowPuvuImj6+1vmCNu7zKwp//26ob1lr7HCg73fe7aq17urRn2D7RD5RXufgYMXDohWy3V5673a5Sa+0rkDy+BGitffsYXXP+hUlFpy4/2fIbfQLgGbf7ndZaX24WgF0QOABmaK1datsEcn25w030Sfym5rJ4zBr399QxNH8n/Wzjy1trj54689uXPWyt3WPM7XHZhUtTnlz21tQSkFsHzhuptb6vlHKLFZOj3ru1tjUKYaXW2hXGKJad/v18bK1167r8Ofd3ybGSyJY+f8TUEp7PW7GawxxTc1l8U+g+sbWKyypXnPlczrMXr9FJvN1efNvcPrfdcHTMoyd+fu3G1ASl599F3OjL+PZldru/X+dn9IiTD5tx0/7a/nFrbXGEDAAzCRwAE8Yv7i/btlTq1EoWK9Va++R6b5m42fe11h6yxi/Pd5yYj+Mbxy/kH2utPa9Pktdau2Uf2t9au3lr7U6ttT4XwofG2fStA+3+S/1PjAkQ9/LShqmJH0/fq0sKaq1vL6Vcr0+SusNNnttae1hrrb9Gq4am9+izbILHPu/FHWutc4ahL/of2w7ELjiey47bV6313Usm5fy3OZOLjvv9gYmbffd4f9L2iVWXdGz5+MynMzUi4WqttauWE+wQb7dnbAuUfbvtP1OmouWqyZLvPHOEw1xTP18u21q7zpw7aq3dqpTSJ8O99MJfP3+MPJqt1tpHf3xs5lK+r9+PbQzgZHPK8ePH17ru8dixTSbuPrczzzxz5edPO+20dZceA9gT4wzarcfw6ctv+3Q/2H9Gv1kp5e211rNn3ueFxy+v/czsQ2aeRfyDMXriL8eBwKr77z8z71tKeeJuJv5b8j0+fgxd7wFlY2P0yHeN+1012eGWD5ZSfm2MDnj/piu4jCVv7zPOGF96h8frw/TfOuaE6GfqrzGWMb3lkuUwzxnzTjy01vqJmc/hYmOpzj6nxPftcLMPj6UlXzbO5G+/jweO12XLc2qt91jxmH2Szhv0S5VKKTeZ8TTfPd6j147JIA/9PtFau8nEKJJ+MH+VWuvndhq5VEq55nhf5kzi+Ymxn/1pj4JT++ZJsN329+lmYx6Pm05st6+otb5nF99n/yXzzWMUw3bXrLW+f8Z99NfnnmM+lqnfIfu2/Sv9spNa64e23c8p42fUL/ZJRHfYR/p++IZa65dnjnj60TGh7tzlb784JjP93VrrO2d+DcAJNdUP9rsXbCdwAGzTWrvpmPTwm2e+OP2gux8k3L3W+uplN2it3aGU8uullMvM+KV7J/0s/QtrrZMHX621/jg/U0r56ZlD9xd9ecy98aRa67t2+Vy3P59+5vJGC8O7d+PscSB//z14PhcYczb0A6Hr7uIu/rWU8tIeGWqts846t9auMg7A152Qsc97cp1a6ycX7uuyYzTC1rZ0w1rrXy95zKeOSWKXHTCu8/j9jP2DD/s+0Vp7/Ig4232pL0s6zqBvfx63GQedl1njwHPZ9vC0WuviJTt77gC32z8fP0fWeZ/6fCzXXtxuZz7ezUY0OnVu4Git/ewIEZcco0l246wxj00fwdR//vc5i6YuF9sKex8tpdx4+/faWrvd2HcuNfO+Vvn8WIa5vz4AB+b4IQ8cu/2HHOBkdtE1DuS6bxhns/tZ8p1cfLcrDSy4wJKz5kuNX7Qf1Vp7zAgLNxjD7vt15KeN7/FCIxocHwexbxvDsF9Va/102VtX3TBulHFmf08m36u1/tuY8+FprbUrj9ED1x9LNV5hvJfnG7Gn3/aT45r7d4zLBV5Ta/3SLp7/braBfnD0dUP/a63/MPMy0ytuGDe2Hv9SCftErfURrbV3jBhznbGyS49Kjx6Xeyxzsbn71Qp9dMMJnxjyALfbuXOXbH9/175kpdb6mtbag9ac86fHqSuVzfQwcvXx52NrBIlTx+3Pt8MKSXt1mclFFp4fADswggMAAACIH8FhklEAAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABDv1HLIHT9+/JyDfg4AAADA4WYEBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEO/Wgn8CxY8cO+ikAAAAA4YzgAAAAAOIJHAAAAEA8gQMAAACIJ3AAAAAA8QQOAAAAIJ7AAQAAAMQTOAAAAIB4AgcAAAAQT+AAAAAA4gkcAAAAQDyBAwAAAIgncAAAAADxBA4AAAAgnsABAAAAxBM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiHfK8ePHzznoJwEAAACwCSM4AAAAgHgCBwAAABBP4AAAAADiCRwAAABAPIEDAAAAiCdwAAAAAPEEDgAAACCewAEAAADEEzgAAACAeAIHAAAAEE/gAAAAAEq6/w8CClccSfHQVAAAAABJRU5ErkJggg==';\n\nfor (const item of $input.all()) {\n  item.binary = item.binary || {};\n  item.binary.template = {\n    data: b64,\n    mimeType: 'image/png',\n    fileName: 'template.png'\n  };\n}\n\nreturn $input.all();"
       },
-      "id": "d2ec2c3a-b915-4884-b490-55655cd68b5c",
-      "name": "Inject Template",
+      "id": "ce56f477-4f15-429b-8922-d416f4fd160c",
+      "name": "Inject Template1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        14752,
-        4368
+        15632,
+        5424
       ]
     },
     {
@@ -602,13 +615,13 @@
         "height": 1350,
         "options": {}
       },
-      "id": "70794b72-2a3d-4fa1-b58c-dd6a57bb693f",
-      "name": "Resize Image",
+      "id": "84445185-44ad-4a2d-ab43-77971d125e1e",
+      "name": "Resize Image1",
       "type": "n8n-nodes-base.editImage",
       "typeVersion": 1,
       "position": [
-        14944,
-        4368
+        15824,
+        5424
       ]
     },
     {
@@ -618,13 +631,13 @@
         "dataPropertyNameComposite": "template",
         "options": {}
       },
-      "id": "fc685ce1-f68c-4286-b379-2e10fdc682c1",
-      "name": "Composite Image",
+      "id": "ff9ef497-e020-4495-994c-fa4fc8dadd03",
+      "name": "Composite Image1",
       "type": "n8n-nodes-base.editImage",
       "typeVersion": 1,
       "position": [
-        15168,
-        4368
+        16048,
+        5424
       ]
     },
     {
@@ -638,11 +651,11 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        15776,
-        4640
+        16656,
+        5696
       ],
-      "id": "49f8a648-42aa-4544-92da-16186c7aa563",
-      "name": "Send a text message",
+      "id": "3847367f-a4a3-432b-9ea9-63323da29f50",
+      "name": "Send a text message2",
       "webhookId": "3924244b-5fa1-42c0-9863-e9774f949614",
       "credentials": {
         "telegramApi": {
@@ -650,228 +663,320 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "chatId": "7874256891",
+        "text": "=Creation Vijayichirikkunnu - Nanniyundea...",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        17072,
+        5424
+      ],
+      "id": "1c50e0cb-f999-4d34-b11c-44696faa689a",
+      "name": "Send a text message3",
+      "webhookId": "3924244b-5fa1-42c0-9863-e9774f949614",
+      "credentials": {
+        "telegramApi": {
+          "id": "hqGrhFBBirW971bD",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI",
+          "mode": "list",
+          "cachedResultName": "AI Post Content Machine",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 290683789,
+          "mode": "list",
+          "cachedResultName": "Form responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1T6ws93jLgxNa2yo_jYbs8XHCoQ1qmuaJKVCXLTTcQxI/edit#gid=290683789"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        14752,
+        5248
+      ],
+      "id": "3de9791b-8868-4dc8-8a06-c71b39268f6e",
+      "name": "Google Sheets Trigger1",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "e2CYPVxnKOPEglJR",
+          "name": "Google Sheets Trigger account"
+        }
+      }
     }
   ],
   "connections": {
-    "Google Gemini Chat Model": {
+    "Format Sheets Idea": {
+      "main": [
+        [
+          {
+            "node": "Idea Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
       "ai_languageModel": [
         [
           {
-            "node": "Idea Generator2",
+            "node": "Idea Generator",
             "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "Upload file": {
+    "Upload file1": {
       "main": [
         [
           {
-            "node": "Telegram Ask Approval1",
+            "node": "Telegram Ask Approval",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Check Approval1": {
+    "Check Approval": {
       "main": [
         [
           {
-            "node": "Save Post2",
+            "node": "Save Post",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Idea Generator2",
+            "node": "Idea Generator",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Telegram Ask Approval1": {
+    "Telegram Ask Approval": {
       "main": [
         [
           {
-            "node": "Check Approval1",
+            "node": "Check Approval",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Telegram Ask Image1": {
+    "Telegram Ask Image": {
       "main": [
         [
           {
-            "node": "Inject Template",
+            "node": "Inject Template1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Update Status2": {
+    "Update Status": {
       "main": [
         [
           {
-            "node": "Send a text message",
+            "node": "Send a text message2",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Publish Post2": {
+    "Publish Post": {
       "main": [
         [
           {
-            "node": "Update Status2",
+            "node": "Update Status",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Download Image2": {
+    "Download Image": {
       "main": [
         [
           {
-            "node": "Publish Post2",
+            "node": "Publish Post",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Ready Posts2": {
+    "Get Ready Posts": {
       "main": [
         [
           {
-            "node": "Pick One2",
+            "node": "Pick One",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Schedule 2": {
+    "Schedule ": {
       "main": [
         [
           {
-            "node": "Get Ready Posts2",
+            "node": "Get Ready Posts",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Past Ideas2": {
+    "Save Post": {
       "main": [
         [
           {
-            "node": "Join Ideas2",
+            "node": "Send a text message3",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Pick One2": {
+    "Get Past Ideas": {
       "main": [
         [
           {
-            "node": "Download Image2",
+            "node": "Join Ideas",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Join Ideas2": {
+    "Pick One": {
       "main": [
         [
           {
-            "node": "Idea Generator2",
+            "node": "Download Image",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Schedule2": {
+    "Join Ideas": {
       "main": [
         [
           {
-            "node": "Get Past Ideas2",
+            "node": "Idea Generator",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Structured Output Parser2": {
+    "Schedule": {
+      "main": [
+        [
+          {
+            "node": "Get Past Ideas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
       "ai_outputParser": [
         [
           {
-            "node": "Idea Generator2",
+            "node": "Idea Generator",
             "type": "ai_outputParser",
             "index": 0
           }
         ]
       ]
     },
-    "Idea Generator2": {
+    "Idea Generator": {
       "main": [
         [
           {
-            "node": "Telegram Ask Image1",
+            "node": "Telegram Ask Image",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Inject Template": {
+    "Inject Template1": {
       "main": [
         [
           {
-            "node": "Resize Image",
+            "node": "Resize Image1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Resize Image": {
+    "Resize Image1": {
       "main": [
         [
           {
-            "node": "Composite Image",
+            "node": "Composite Image1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Composite Image": {
+    "Composite Image1": {
       "main": [
         [
           {
-            "node": "Upload file",
+            "node": "Upload file1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Send a text message": {
+    "Google Sheets Trigger1": {
       "main": [
-        []
+        [
+          {
+            "node": "Format Sheets Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
