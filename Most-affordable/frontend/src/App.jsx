@@ -18,7 +18,7 @@ function App() {
             <Link to="/" className="logo">MotoX.</Link>
             <nav className="nav-links">
               <Link to="/">Inventory</Link>
-              <Link to="/admin">{isAdmin ? "Dashboard" : "Admin"}</Link>
+              {isAdmin && <Link to="/admin/dashboard" className="glass-btn" style={{padding: '4px 12px'}}>Dashboard</Link>}
             </nav>
           </div>
         </header>
@@ -34,7 +34,10 @@ function App() {
         </main>
 
         <footer className="footer">
-          <p>&copy; {new Date().getFullYear()} MotoX Dealership. All Rights Reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} MotoX Dealership. All Rights Reserved
+            <Link to="/admin" style={{ textDecoration: 'none', color: 'inherit', cursor: 'default' }}>.</Link>
+          </p>
         </footer>
       </div>
     </Router>
