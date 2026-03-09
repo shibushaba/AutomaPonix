@@ -183,11 +183,6 @@ a {
   color: var(--text-main);
 }
 
-.subtle-admin-link {
-  font-size: 0.7rem;
-  opacity: 0.5;
-}
-
 .logo {
   font-family: var(--font-serif);
   font-size: 2rem;
@@ -564,10 +559,6 @@ a {
     align-items: center;
     gap: 16px;
     padding-bottom: 20px;
-  }
-
-  .subtle-admin-link {
-    margin-top: 10px;
   }
 
   .detail-img-section {

@@ -20,10 +20,8 @@ function App() {
             </div>
             <nav className="nav-bottom">
               <Link to="/" className="nav-item">Inventory</Link>
-              {isAdmin ? (
+              {isAdmin && (
                 <Link to="/admin/dashboard" className="nav-item">Dashboard</Link>
-              ) : (
-                <Link to="/admin" className="nav-item subtle-admin-link">Admin</Link>
               )}
             </nav>
           </div>
