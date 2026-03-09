@@ -23,7 +23,7 @@ function App() {
               {isAdmin ? (
                 <Link to="/admin/dashboard" className="nav-item">Dashboard</Link>
               ) : (
-                <Link to="/admin" className="subtle-link admin-trigger">.</Link>
+                <Link to="/admin" className="nav-item subtle-admin-link">Admin</Link>
               )}
             </nav>
           </div>

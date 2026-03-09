@@ -183,11 +183,9 @@ a {
   color: var(--text-main);
 }
 
-.admin-trigger {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
+.subtle-admin-link {
+  font-size: 0.7rem;
+  opacity: 0.5;
 }
 
 .logo {
@@ -563,12 +561,12 @@ a {
 
   .nav-bottom {
     flex-direction: column;
+    align-items: center;
     gap: 16px;
+    padding-bottom: 20px;
   }
 
-  .admin-trigger {
-    position: static;
-    transform: none;
+  .subtle-admin-link {
     margin-top: 10px;
   }
 
