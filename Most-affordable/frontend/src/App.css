@@ -132,7 +132,7 @@
 }
 
 .admin-table th {
-    background: #f8f8f6;
+    background: #222222;
     color: var(--text-muted);
     font-weight: 700;
     text-transform: uppercase;
@@ -141,7 +141,7 @@
 }
 
 .admin-table tr:hover {
-    background: #fcfcfc;
+    background: #2a2a2a;
 }
 
 .row-sold {
@@ -174,14 +174,14 @@
 }
 
 .delete-btn {
-    background: #fffafa;
-    color: #e45858;
-    border: 1px solid #fee2e2;
+    background: #2a1616;
+    color: #ef4444;
+    border: 1px solid #451b1b;
 }
 
 .delete-btn:hover {
-    background: #fee2e2;
-    color: #b91c1c;
+    background: #451b1b;
+    color: #fca5a5;
 }
 
 .add-bike-container {
