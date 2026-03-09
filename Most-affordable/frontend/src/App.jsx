@@ -34,10 +34,12 @@ function App() {
         </main>
 
         <footer className="footer">
-          <p>
-            &copy; {new Date().getFullYear()} MotoX Dealership. All Rights Reserved
-            <Link to="/admin" style={{ textDecoration: 'none', color: 'inherit', cursor: 'default' }}>.</Link>
-          </p>
+          <div className="footer-content">
+            <p>&copy; {new Date().getFullYear()} MotoX Dealership. All Rights Reserved.</p>
+            <div className="footer-links">
+              <Link to="/admin" className="subtle-link">Admin Portal</Link>
+            </div>
+          </div>
         </footer>
       </div>
     </Router>

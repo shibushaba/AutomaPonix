@@ -37,21 +37,23 @@ export default function Home() {
 
   return (
     <div className="page-wrapper container">
-      <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
         <h1 style={{ fontSize: '3rem', marginBottom: '16px' }}>
           Ride Your <span style={{ color: 'var(--accent)' }}>Dream</span>
         </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto', marginBottom: '30px' }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto', marginBottom: '40px' }}>
           Explore our premium selection of pre-owned sports bikes and supercars, delivered with unmatched quality and service.
         </p>
-        <input 
-          type="text" 
-          placeholder="🔎 Search by ID, Make, or Model..." 
-          className="search-input"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          style={{ width: '100%', maxWidth: '400px', margin: '0 auto' }}
-        />
+        
+        <div className="search-wrapper">
+          <input 
+            type="text" 
+            placeholder="🔎 Search by ID, Make, or Model..." 
+            className="search-input"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
       </div>
 
       {loading ? (
@@ -60,10 +62,10 @@ export default function Home() {
           <p>Loading inventory...</p>
         </div>
       ) : bikes.length === 0 ? (
-        <div className="glass-panel" style={{ padding: '40px', textAlign: 'center' }}>
-          <Zap size={48} color="var(--accent)" style={{ margin: '0 auto 16px' }} />
+        <div className="glass-panel empty-state">
+          <Zap size={48} className="empty-state-icon" />
           <h3>No bikes currently available.</h3>
-          <p style={{ color: 'var(--text-muted)' }}>Check back later or follow us on Instagram.</p>
+          <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>Check back later or follow us on Instagram.</p>
         </div>
       ) : (
         <div className="bike-grid">
