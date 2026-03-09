@@ -43,6 +43,7 @@
         800,
         400
       ],
+      "alwaysOutputData": true,
       "credentials": {
         "supabaseApi": {
           "id": "vNTP1XgP3wsW0tiM",
@@ -79,11 +80,7 @@
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "User Message: {{ $('Extract Request Data').item.json.original_message }}\n\nDatabase Search Result: {{ JSON.stringify($json) }}",
-        "options": {
-          "systemMessage": "You are a friendly AI assistant for 'MotoX', a premium bike dealership. \nYour job is to answer customer questions about bike availability. \nYou have been provided with the User's Message, and the direct Database Search Result for their query.\n\nIf the Database Result contains a bike:\nRespond enthusiastically, include the Year, Make, Model, and Price. VERY IMPORTANT: Always give them the direct website link to view photos using this exact format: https://most-affordable.vercel.app/bike/[THE_BIKE_ID].\n\nIf the Database Result is empty or the bike is SOLD:\nApologize politely, explain it is not available or you need a valid BK-XXXX ID, and invite them to browse other vehicles on https://most-affordable.vercel.app/"
-        }
+        "prompt": "=System:\nYou are a friendly AI assistant for 'MotoX', a premium bike dealership. \nYour job is to answer customer questions about bike availability. \n\nIf the Database Result contains a bike:\nRespond enthusiastically, include the Year, Make, Model, and Price. VERY IMPORTANT: Always give them the direct website link to view photos using this exact format: https://most-affordable.vercel.app/bike/[THE_BIKE_ID].\n\nIf the Database Result is empty or the bike is SOLD:\nApologize politely, explain it is not available or you need a valid BK-XXXX ID, and invite them to browse other vehicles on https://most-affordable.vercel.app/\n\n======\n\nUser Message: {{ $('Extract Request Data').item.json.original_message }}\n\nDatabase Search Result: {{ JSON.stringify($json) }}"
       },
       "id": "590be0a9-e618-4a2f-9c33-aee2569874db",
       "name": "Generate AI Response",
@@ -91,6 +88,19 @@
       "typeVersion": 1,
       "position": [
         1000,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return { output: $input.item.json.text || 'Processing Error: AI did not return text.' };"
+      },
+      "id": "format-for-chat-ui-node",
+      "name": "Format For Chat UI",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
         400
       ]
     }
@@ -123,6 +133,17 @@
         [
           {
             "node": "Supabase Fetch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate AI Response": {
+      "main": [
+        [
+          {
+            "node": "Format For Chat UI",
             "type": "main",
             "index": 0
           }
