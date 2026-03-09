@@ -103,7 +103,7 @@ const AdminDashboard = ({ isAdmin }) => {
                 <td data-label="Year">{bike.year}</td>
                 <td data-label="Price">₹{bike.price.toLocaleString('en-IN')}</td>
                 <td data-label="Status">
-                  <span className={`status-badge ${bike.status}`}>
+                  <span className={`status-badge status-${bike.status}`}>
                     {bike.status.toUpperCase()}
                   </span>
                 </td>
