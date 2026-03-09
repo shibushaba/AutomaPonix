@@ -15,10 +15,14 @@ function App() {
       <div className="app-container">
         <header className="navbar glass-panel">
           <div className="nav-content">
-            <Link to="/" className="logo">MotoX.</Link>
+            <Link to="/" className="logo">MOST AFFORDABLE.</Link>
             <nav className="nav-links">
               <Link to="/">Inventory</Link>
-              {isAdmin && <Link to="/admin/dashboard" className="glass-btn" style={{padding: '4px 12px'}}>Dashboard</Link>}
+              {isAdmin ? (
+                <Link to="/admin/dashboard" className="glass-btn" style={{padding: '4px 12px', marginLeft: '12px'}}>Dashboard</Link>
+              ) : (
+                <Link to="/admin" className="subtle-link" style={{marginLeft: '12px'}}>Admin</Link>
+              )}
             </nav>
           </div>
         </header>
@@ -32,15 +36,6 @@ function App() {
             <Route path="/admin/add" element={<AdminAddBike isAdmin={isAdmin} />} />
           </Routes>
         </main>
-
-        <footer className="footer">
-          <div className="footer-content">
-            <p>&copy; {new Date().getFullYear()} MotoX Dealership. All Rights Reserved.</p>
-            <div className="footer-links">
-              <Link to="/admin" className="subtle-link">Admin Portal</Link>
-            </div>
-          </div>
-        </footer>
       </div>
     </Router>
   );

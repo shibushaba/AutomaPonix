@@ -18,10 +18,10 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 body {
-  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   background-color: var(--bg-dark);
   color: var(--text-main);
   line-height: 1.5;
@@ -102,6 +102,10 @@ a {
 .page-wrapper {
   padding-top: 40px;
   padding-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 80px);
+  /* Account for navbar */
   animation: fadeIn 0.5s ease-out;
 }
 
@@ -142,36 +146,7 @@ a {
   color: white;
 }
 
-/* Footer Layouts */
-.footer {
-  padding: 30px 0;
-  border-top: 1px solid var(--border-glass);
-  margin-top: auto;
-}
-
-.footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.subtle-link {
-  color: var(--text-muted);
-  text-decoration: none;
-  transition: color 0.2s ease;
-  font-size: 0.85rem;
-  opacity: 0.5;
-}
-
-.subtle-link:hover {
-  color: white;
-  opacity: 1;
-}
+/* Header & Utilities */
 
 /* Grid Layouts */
 .search-wrapper {
