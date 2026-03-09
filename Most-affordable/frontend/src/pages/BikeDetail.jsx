@@ -72,7 +72,7 @@ export default function BikeDetail() {
           <h1 className="detail-title">{bike.year} {bike.make} {bike.model}</h1>
           
           <div className="price-tag">
-            ${(bike.price || 0).toLocaleString()}
+            ₹{(bike.price || 0).toLocaleString('en-IN')}
           </div>
           
           <div className="spec-list">
@@ -88,6 +88,18 @@ export default function BikeDetail() {
               <span className="spec-label">Year</span>
               <span className="spec-value">{bike.year}</span>
             </div>
+            {bike.km != null && (
+              <div className="spec-item">
+                <span className="spec-label">Mileage</span>
+                <span className="spec-value">{bike.km.toLocaleString('en-IN')} km</span>
+              </div>
+            )}
+            {bike.color && (
+              <div className="spec-item">
+                <span className="spec-label">Color</span>
+                <span className="spec-value">{bike.color}</span>
+              </div>
+            )}
           </div>
           
           <div style={{ marginBottom: '32px' }}>

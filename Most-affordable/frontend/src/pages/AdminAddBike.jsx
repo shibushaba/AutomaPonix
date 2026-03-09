@@ -10,8 +10,10 @@ const AdminAddBike = ({ isAdmin }) => {
     model: '',
     year: '',
     price: '',
+    km: '',
+    color: '',
     description: '',
-    imageUrl: ''
+    images: []
   });
 
   if (!isAdmin) {
@@ -20,10 +22,17 @@ const AdminAddBike = ({ isAdmin }) => {
   }
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    if (e.target.name === 'images') {
+      setFormData({
+        ...formData,
+        images: Array.from(e.target.files)
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+      });
+    }
   };
 
   const generateNextId = async () => {
@@ -49,14 +58,37 @@ const AdminAddBike = ({ isAdmin }) => {
     try {
       const nextId = await generateNextId();
       
+      // Upload images to Supabase Storage
+      const uploadedUrls = [];
+      if (formData.images && formData.images.length > 0) {
+        for (const file of formData.images) {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${nextId}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('bike-images')
+            .upload(fileName, file);
+            
+          if (uploadError) throw uploadError;
+          
+          const { data: publicUrlData } = supabase.storage
+            .from('bike-images')
+            .getPublicUrl(fileName);
+            
+          uploadedUrls.push(publicUrlData.publicUrl);
+        }
+      }
+      
       const newBike = {
         id: nextId,
         make: formData.make,
         model: formData.model,
         year: parseInt(formData.year),
         price: parseFloat(formData.price),
+        km: formData.km ? parseInt(formData.km) : null,
+        color: formData.color,
         description: formData.description,
-        image_urls: [formData.imageUrl],
+        image_urls: uploadedUrls,
         status: 'available'
       };
 
@@ -99,14 +131,26 @@ const AdminAddBike = ({ isAdmin }) => {
               <input type="number" name="year" value={formData.year} onChange={handleChange} required placeholder="e.g. 2024" />
             </div>
             <div className="form-group">
-              <label>Price ($)</label>
-              <input type="number" name="price" value={formData.price} onChange={handleChange} required placeholder="e.g. 15000" />
+              <label>Price (₹)</label>
+              <input type="number" name="price" value={formData.price} onChange={handleChange} required placeholder="e.g. 150000" />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label>Kilometers (KM)</label>
+              <input type="number" name="km" value={formData.km} onChange={handleChange} placeholder="e.g. 12000" />
+            </div>
+            <div className="form-group">
+              <label>Color</label>
+              <input type="text" name="color" value={formData.color} onChange={handleChange} placeholder="e.g. Matte Black" />
             </div>
           </div>
 
           <div className="form-group">
-            <label>Image URL</label>
-            <input type="url" name="imageUrl" value={formData.imageUrl} onChange={handleChange} required placeholder="https://example.com/image.jpg" />
+            <label>Images (Upload Multiple)</label>
+            <input type="file" name="images" onChange={handleChange} multiple accept="image/*" required style={{ padding: '10px' }} />
+            <small style={{ color: 'var(--text-muted)' }}>You can select multiple photos from your device.</small>
           </div>
 
           <div className="form-group">

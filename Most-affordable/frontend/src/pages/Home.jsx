@@ -87,7 +87,7 @@ export default function Home() {
                 <div>
                   <div className="bike-id">ID: {bike.id}</div>
                   <h3 className="bike-title">{bike.year} {bike.make} {bike.model}</h3>
-                  <div className="bike-price">${(bike.price || 0).toLocaleString()}</div>
+                  <div className="bike-price">₹{(bike.price || 0).toLocaleString('en-IN')}</div>
                 </div>
                 <div>
                   <Link to={`/bike/${bike.id}`} className="glass-btn" style={{ width: '100%', marginTop: '30px' }}>
