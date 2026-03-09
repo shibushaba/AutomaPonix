@@ -98,16 +98,16 @@ const AdminDashboard = ({ isAdmin }) => {
           <tbody>
             {filteredBikes.map(bike => (
               <tr key={bike.id} className={bike.status === 'sold' ? 'row-sold' : ''}>
-                <td><strong>{bike.id}</strong></td>
-                <td>{bike.make} {bike.model}</td>
-                <td>{bike.year}</td>
-                <td>₹{bike.price.toLocaleString('en-IN')}</td>
-                <td>
+                <td data-label="ID"><strong>{bike.id}</strong></td>
+                <td data-label="Make & Model">{bike.make} {bike.model}</td>
+                <td data-label="Year">{bike.year}</td>
+                <td data-label="Price">₹{bike.price.toLocaleString('en-IN')}</td>
+                <td data-label="Status">
                   <span className={`status-badge ${bike.status}`}>
                     {bike.status.toUpperCase()}
                   </span>
                 </td>
-                <td className="actions-cell">
+                <td data-label="Actions" className="actions-cell">
                   <button onClick={() => toggleStatus(bike.id, bike.status)} className="action-btn toggle-btn">
                     Mark {bike.status === 'available' ? 'Sold' : 'Avail'}
                   </button>

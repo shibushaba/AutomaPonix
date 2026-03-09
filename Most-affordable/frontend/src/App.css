@@ -260,4 +260,65 @@
         grid-template-columns: 1fr;
         gap: 0;
     }
+
+    /* Mobile Table Card Layout */
+    .admin-table,
+    .admin-table thead,
+    .admin-table tbody,
+    .admin-table th,
+    .admin-table td,
+    .admin-table tr {
+        display: block;
+    }
+
+    .admin-table thead tr {
+        display: none;
+    }
+
+    .admin-table tr {
+        margin-bottom: 24px;
+        border: 1px solid var(--border-classic);
+        border-radius: 8px;
+        overflow: hidden;
+        background: var(--bg-card);
+    }
+
+    .admin-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        border-bottom: 1px solid var(--border-classic);
+        padding: 16px;
+        white-space: normal;
+    }
+
+    .admin-table td:last-child {
+        border-bottom: none;
+    }
+
+    .admin-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-align: left;
+        margin-right: 16px;
+    }
+
+    .actions-cell {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+    }
+
+    .admin-table-container {
+        overflow-x: visible;
+        margin: 0;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
 }
