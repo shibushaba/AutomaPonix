@@ -1,17 +1,36 @@
 {
+  "name": "Conversational Bike Dealership Automation",
   "nodes": [
     {
       "parameters": {
         "options": {}
       },
+      "id": "chat-trigger",
+      "name": "Chat Trigger",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1,
+      "position": [ 200, 400 ],
+      "webhookId": "ddf8efbd-5544-4164-ae2b-a9f4d5ccac13"
+    },
+    {
+      "parameters": {
+        "sessionKey": "={{ $sessionId }}"
+      },
+      "id": "memory-node",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1,
+      "position": [ 400, 600 ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "model-1",
+      "name": "Google Gemini Chat Model",
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
-      "position": [
-        4736,
-        2624
-      ],
-      "id": "b7724bb8-12e3-4645-937d-c77102900746",
-      "name": "Google Gemini Chat Model",
+      "position": [ 400, 200 ],
       "credentials": {
         "googlePalmApi": {
           "id": "M8x78S7HaYYge2Lz",
@@ -21,122 +40,23 @@
     },
     {
       "parameters": {
-        "operation": "getAll",
-        "tableId": "bikes",
-        "limit": 1,
-        "filters": {
-          "conditions": [
-            {
-              "keyName": "id",
-              "condition": "eq",
-              "keyValue": "={{ $json.extracted_id }}"
-            }
-          ]
-        }
+        "prompt": "=System:\nYou are a classic and standard AI assistant for a premium bike dealership. You maintain conversation with the user to help them find a bike.\nYour goal is to either find a specific bike by ID (e.g. BK-1) OR save a general request (e.g. 'Himalayan 450') if they don't have an ID.\nTo save a general request, you MUST first confirm the specific bike name they want (e.g. 'You need Himalayan 450, is this correct?'). ONLY save the request when they say yes/confirm.\n\nYou MUST ALWAYS and ONLY respond with a valid JSON object in this exact format. No markdown, no backticks, no other text:\n{\n  \"reply_to_user\": \"Your conversational reply here\",\n  \"action\": \"none\" | \"search_db\" | \"save_request\",\n  \"action_param\": \"bike_id or bike_name or empty\"\n}\n\nRules:\n- If user provides a bike ID (e.g. BK-123), set action to 'search_db', action_param to 'BK-123', reply_to_user to 'Searching'.\n- If user confirms a general request (e.g. says yes after you ask), set action to 'save_request', action_param to the confirmed bike name, reply_to_user to 'Your request for a [Bike] has been saved and our dealership team will reach out to you shortly!'\n- Otherwise, set action to 'none', action_param to '', and set reply_to_user to your conversational response (e.g. asking for the bike name, confirming the bike name). Use max ONE emoji total."
       },
-      "id": "985e145f-718f-4ef4-8d7a-efddfd30e568",
-      "name": "Supabase Fetch",
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        4528,
-        2416
-      ],
-      "alwaysOutputData": true,
-      "credentials": {
-        "supabaseApi": {
-          "id": "vNTP1XgP3wsW0tiM",
-          "name": "Supabase account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "const text = $input.item.json.chatInput || '';\nconst match = text.match(/BK-\\d+/i);\nreturn {\n  original_message: text,\n  extracted_id: match ? match[0].toUpperCase() : 'NONE'\n};"
-      },
-      "id": "f71ee246-40a9-4dcd-a30a-fbf0ab004dee",
-      "name": "Extract Request Data",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        4128,
-        2528
-      ]
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "id": "13724ace-ffa5-4df1-bbdc-02ded921bdda",
-      "name": "Chat Trigger",
-      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
-      "typeVersion": 1,
-      "position": [
-        3936,
-        2528
-      ],
-      "webhookId": "ddf8efbd-5544-4164-ae2b-a9f4d5ccac13"
-    },
-    {
-      "parameters": {
-        "prompt": "=System:\nYou are a classic and standard AI assistant for a premium bike dealership. \nYour job is to answer customer questions about bike availability. Use a maximum of ONE emoji in your entire response. \n\nIf the Database Result contains an available bike:\nList its details EXACTLY in this format:\n\nBrand : [Make]\nModel : [Model]\nPrice : ₹[Price]\nColor : [Color]\nYear : [Year]\nKM : [KM]\n\nThen, politely provide the direct website link to view photos using this exact format: https://most-affordable.vercel.app/bike/[THE_BIKE_ID].\n\nIf the Database Result is empty or the bike is SOLD:\nApologize politely, explain it is not available, and invite them to browse other vehicles on https://most-affordable.vercel.app/.\n\n======\n\nUser Message: {{ $('Extract Request Data').item.json.original_message }}\n\nDatabase Search Result: {{ JSON.stringify($json) }}"
-      },
-      "id": "44d9dc53-a517-4e69-b6d2-ca9af35031bc",
-      "name": "Generate AI Response",
+      "id": "llm-1",
+      "name": "Conversational Logic LLM",
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1,
-      "position": [
-        4736,
-        2416
-      ]
+      "position": [ 400, 400 ]
     },
     {
       "parameters": {
-        "jsCode": "return { output: $input.item.json.text || 'Processing Error: AI did not return text.' };"
+        "jsCode": "try {\n  let str = $input.item.json.text || '';\n  str = str.replace(/```json/ig, '').replace(/```/g, '').trim();\n  const parsed = JSON.parse(str);\n  return [parsed];\n} catch(e) {\n  return [{ reply_to_user: \"I'm sorry, I misunderstood. Could you rephrase that?\", action: \"none\", action_param: \"\" }];\n}"
       },
-      "id": "9b11132c-7378-47ac-bd91-8ce26599b250",
-      "name": "Format For Chat UI",
+      "id": "parse-json",
+      "name": "Parse JSON Output",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        5088,
-        2416
-      ]
-    },
-    {
-      "parameters": {
-        "operation": "insert",
-        "tableId": "requests",
-        "columns": "message",
-        "message": "={{ $('Extract Request Data').item.json.original_message }}"
-      },
-      "id": "ae9256ee-e116-4552-bcb1-701fabe2d6c4",
-      "name": "Supabase Insert Request",
-      "type": "n8n-nodes-base.supabase",
-      "typeVersion": 1,
-      "position": [
-        4528,
-        2624
-      ],
-      "credentials": {
-        "supabaseApi": {
-          "id": "vNTP1XgP3wsW0tiM",
-          "name": "Supabase account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "return { output: 'Your request has been noted and our dealership team will reach out to you shortly! Browse our website at https://most-affordable.vercel.app/' };"
-      },
-      "id": "729e6f84-9e1b-4ce4-a924-7d50a114d144",
-      "name": "Format General Reply",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        4736,
-        2624
-      ]
+      "position": [ 600, 400 ]
     },
     {
       "parameters": {
@@ -149,13 +69,13 @@
           },
           "conditions": [
             {
-              "id": "e575a9ab-1784-45b6-941f-96d5a6452302",
-              "leftValue": "={{ $json.extracted_id }}",
-              "rightValue": "NONE",
+              "id": "if-1",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "search_db",
               "operator": {
                 "type": "string",
-                "operation": "notEquals",
-                "name": "filter.operator.notEquals"
+                "operation": "equals",
+                "name": "filter.operator.equals"
               }
             }
           ],
@@ -165,82 +85,213 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
-      "position": [
-        4320,
-        2528
-      ],
-      "id": "8c20e7cd-2499-4162-b085-696ef4f2ccce",
-      "name": "If1"
+      "position": [ 800, 400 ],
+      "id": "if-search",
+      "name": "If Search DB"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "if-2",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "save_request",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [ 1000, 500 ],
+      "id": "if-save",
+      "name": "If Save Request"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "bikes",
+        "limit": 1,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Parse JSON Output').item.json.action_param }}"
+            }
+          ]
+        }
+      },
+      "id": "supabase-fetch",
+      "name": "Supabase Fetch",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [ 1000, 200 ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "vNTP1XgP3wsW0tiM",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "model-2",
+      "name": "Google Gemini (Format DB)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [ 1200, 0 ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "M8x78S7HaYYge2Lz",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "prompt": "=System:\nYou are a classic AI assistant for a premium bike dealership. Use max ONE emoji.\nIf Database Result contains an available bike:\nList its details EXACTLY in this format:\nBrand : [Make]\nModel : [Model]\nPrice : ₹[Price]\nColor : [Color]\nYear : [Year]\nKM : [KM]\nThen, politely provide the direct website link to view photos: https://most-affordable.vercel.app/bike/[THE_BIKE_ID].\n\nIf Database Result is empty or the bike is SOLD:\nApologize politely, explain it is not available, and invite them to browse vehicles on https://most-affordable.vercel.app/.\n======\nDatabase Search Result: {{ JSON.stringify($json) }}"
+      },
+      "id": "llm-2",
+      "name": "Format DB Result",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1,
+      "position": [ 1200, 200 ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return { output: $input.item.json.text || 'Processing Error: AI did not return text.' };"
+      },
+      "id": "format-ui-db",
+      "name": "Format DB Output UI",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [ 1400, 200 ]
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "tableId": "requests",
+        "columns": "message",
+        "message": "={{ $('Parse JSON Output').item.json.action_param }}"
+      },
+      "id": "supabase-insert",
+      "name": "Supabase Insert Request",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [ 1200, 400 ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "vNTP1XgP3wsW0tiM",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return { output: $('Parse JSON Output').item.json.reply_to_user || 'Your request has been successfully saved!' };"
+      },
+      "id": "format-ui-save",
+      "name": "Format Save Output UI",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [ 1400, 400 ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return { output: $('Parse JSON Output').item.json.reply_to_user || 'Something went wrong.' };"
+      },
+      "id": "format-ui-none",
+      "name": "Format Normal Output UI",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [ 1200, 600 ]
     }
   ],
   "connections": {
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "Conversational Logic LLM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Conversational Logic LLM",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Google Gemini Chat Model": {
       "ai_languageModel": [
         [
           {
-            "node": "Generate AI Response",
+            "node": "Conversational Logic LLM",
             "type": "ai_languageModel",
             "index": 0
           }
         ]
       ]
     },
-    "Supabase Fetch": {
+    "Google Gemini (Format DB)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Format DB Result",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversational Logic LLM": {
       "main": [
         [
           {
-            "node": "Generate AI Response",
+            "node": "Parse JSON Output",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Chat Trigger": {
+    "Parse JSON Output": {
       "main": [
         [
           {
-            "node": "Extract Request Data",
+            "node": "If Search DB",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Generate AI Response": {
-      "main": [
-        [
-          {
-            "node": "Format For Chat UI",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Supabase Insert Request": {
-      "main": [
-        [
-          {
-            "node": "Format General Reply",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract Request Data": {
-      "main": [
-        [
-          {
-            "node": "If1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "If1": {
+    "If Search DB": {
       "main": [
         [
           {
@@ -251,17 +302,63 @@
         ],
         [
           {
+            "node": "If Save Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Save Request": {
+      "main": [
+        [
+          {
             "node": "Supabase Insert Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Normal Output UI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Fetch": {
+      "main": [
+        [
+          {
+            "node": "Format DB Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format DB Result": {
+      "main": [
+        [
+          {
+            "node": "Format DB Output UI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Insert Request": {
+      "main": [
+        [
+          {
+            "node": "Format Save Output UI",
             "type": "main",
             "index": 0
           }
         ]
       ]
     }
-  },
-  "pinData": {},
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "812e57160b6cfa0488283afdc6a904b27f91c8dd7755e053008327f19ff2ef3d"
   }
 }
