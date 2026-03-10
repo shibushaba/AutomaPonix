@@ -5,6 +5,8 @@ import BikeDetail from './pages/BikeDetail';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminAddBike from './pages/AdminAddBike';
+import AdminEditBike from './pages/AdminEditBike';
+import AdminRequests from './pages/AdminRequests';
 import './App.css';
 
 function App() {
@@ -34,6 +36,8 @@ function App() {
             <Route path="/admin" element={<AdminLogin onLogin={setIsAdmin} />} />
             <Route path="/admin/dashboard" element={<AdminDashboard isAdmin={isAdmin} />} />
             <Route path="/admin/add" element={<AdminAddBike isAdmin={isAdmin} />} />
+            <Route path="/admin/edit/:id" element={<AdminEditBike isAdmin={isAdmin} />} />
+            <Route path="/admin/requests" element={<AdminRequests isAdmin={isAdmin} />} />
           </Routes>
         </main>
       </div>

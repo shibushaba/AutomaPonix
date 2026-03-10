@@ -7,6 +7,8 @@ export default function Home() {
   const [bikes, setBikes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterBrand, setFilterBrand] = useState('All');
+  const [filterBudget, setFilterBudget] = useState('All');
 
   useEffect(() => {
     async function fetchBikes() {
@@ -26,13 +28,27 @@ export default function Home() {
     fetchBikes();
   }, []);
 
+  const brands = ['All', ...new Set(bikes.map(b => b.make))];
+
   const filteredBikes = bikes.filter(bike => {
     const query = searchQuery.toLowerCase();
-    return (
+    const matchesSearch = (
       (bike.id && bike.id.toLowerCase().includes(query)) ||
       (bike.make && bike.make.toLowerCase().includes(query)) ||
       (bike.model && bike.model.toLowerCase().includes(query))
     );
+    
+    const matchesBrand = filterBrand === 'All' || bike.make === filterBrand;
+    
+    let matchesBudget = true;
+    if (filterBudget !== 'All') {
+      const price = bike.price || 0;
+      if (filterBudget === 'Under ₹1L') matchesBudget = price < 100000;
+      else if (filterBudget === '₹1L - ₹2L') matchesBudget = price >= 100000 && price <= 200000;
+      else if (filterBudget === 'Over ₹2L') matchesBudget = price > 200000;
+    }
+
+    return matchesSearch && matchesBrand && matchesBudget;
   });
 
   return (
@@ -43,14 +59,35 @@ export default function Home() {
           <span style={{ color: 'var(--accent)', fontStyle: 'italic' }}>High-Performance</span> Riding.
         </h1>
         
-        <div className="search-wrapper">
-          <input 
-            type="text" 
-            placeholder="🔎 Search by ID, Make, or Model..." 
-            className="search-input"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        <div className="search-filter-container">
+          <div className="search-wrapper" style={{ flex: 1, margin: 0, maxWidth: '100%' }}>
+            <input 
+              type="text" 
+              placeholder="Search by ID, Make, or Model..." 
+              className="search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <select 
+            className="search-input filter-dropdown" 
+            value={filterBrand} 
+            onChange={(e) => setFilterBrand(e.target.value)}
+          >
+            {brands.map(brand => (
+              <option key={brand} value={brand}>{brand === 'All' ? 'All Brands' : brand}</option>
+            ))}
+          </select>
+          <select 
+            className="search-input filter-dropdown" 
+            value={filterBudget} 
+            onChange={(e) => setFilterBudget(e.target.value)}
+          >
+            <option value="All">All Budgets</option>
+            <option value="Under ₹1L">Under ₹1,00,000</option>
+            <option value="₹1L - ₹2L">₹1L - ₹2L</option>
+            <option value="Over ₹2L">Over ₹2,00,000</option>
+          </select>
         </div>
       </div>
 

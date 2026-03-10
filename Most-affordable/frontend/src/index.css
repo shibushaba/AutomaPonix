@@ -572,4 +572,12 @@ a {
   .page-wrapper {
     padding-top: 20px;
   }
+
+  .search-filter-container {
+    flex-direction: column;
+  }
+
+  .filter-dropdown {
+    width: 100%;
+  }
 }

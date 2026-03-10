@@ -75,12 +75,15 @@ const AdminDashboard = ({ isAdmin }) => {
       <div className="admin-controls glass-panel">
         <input 
           type="text" 
-          placeholder="🔎 Search by ID, Make, or Model..." 
+          placeholder="Search by ID, Make, or Model..." 
           className="search-input"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <button className="primary-btn" onClick={() => navigate('/admin/add')}>+ Add New Vehicle</button>
+        <div style={{ display: 'flex', gap: '16px' }}>
+          <button className="glass-btn" onClick={() => navigate('/admin/requests')}>📬 Requests Inbox</button>
+          <button className="primary-btn" onClick={() => navigate('/admin/add')}>+ Add New Vehicle</button>
+        </div>
       </div>
 
       <div className="admin-table-container glass-panel">
@@ -108,6 +111,9 @@ const AdminDashboard = ({ isAdmin }) => {
                   </span>
                 </td>
                 <td data-label="Actions" className="actions-cell">
+                  <button onClick={() => navigate(`/admin/edit/${bike.id}`)} className="action-btn toggle-btn">
+                    Edit
+                  </button>
                   <button onClick={() => toggleStatus(bike.id, bike.status)} className="action-btn toggle-btn">
                     Mark {bike.status === 'available' ? 'Sold' : 'Avail'}
                   </button>
