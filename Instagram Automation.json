@@ -18,13 +18,13 @@
         },
         "options": {}
       },
-      "id": "3daff6eb-c379-4275-987e-930e251c5ec0",
+      "id": "0f281486-a3b9-406e-99f8-93a5c759e073",
       "name": "Check DB",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        2672,
-        2336
+        20784,
+        12016
       ],
       "alwaysOutputData": true,
       "credentials": {
@@ -36,15 +36,15 @@
     },
     {
       "parameters": {
-        "jsCode": "const dbItems = $input.all();\nlet name = 'missing';\nlet email = 'missing';\nlet phone = 'missing';\nlet requirement = 'missing';\nlet aiInput = '';\nlet senderId = '';\n\nif (dbItems.length > 0 && dbItems[0].json) {\n  const data = dbItems[0].json;\n  name = data.NAME || 'missing';\n  email = data.EMAIL || 'missing';\n  phone = data.PHONE || 'missing';\n  requirement = data.REQUIRMENT || data.REQUIREMENT || 'missing';\n  aiInput = data.aiInput || '';\n  senderId = data.senderId || '';\n}\n\nconst memoryFlag = `Known lead info:\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nRequirement: ${requirement}`;\n\nif (!aiInput || !senderId) {\n    const webhookNode = $items().find(i => i.json && i.json.body && i.json.body.entry);\n    if (webhookNode) {\n        const webhookData = webhookNode.json.body.entry[0];\n        if (webhookData.messaging && webhookData.messaging.length > 0) {\n            aiInput = webhookData.messaging[0].message.text;\n            senderId = webhookData.messaging[0].sender.id;\n        } else if (webhookData.changes && webhookData.changes.length > 0) {\n            aiInput = webhookData.changes[0].value.text;\n            senderId = (webhookData.changes[0].value.from ? webhookData.changes[0].value.from.id : webhookData.changes[0].value.id) || '';\n        }\n    }\n}\n\nreturn {\n  json: {\n    aiInput: aiInput || '',\n    senderId: senderId || '',\n    memoryContext: memoryFlag\n  }\n};"
+        "jsCode": "const dbItems = $input.all();\n\nlet name = 'missing';\nlet email = 'missing';\nlet phone = 'missing';\nlet requirement = 'missing';\n\nif (dbItems.length > 0 && dbItems[0].json) {\n  const data = dbItems[0].json;\n\n  name = data.NAME || 'missing';\n  email = data.EMAIL || 'missing';\n  phone = data.PHONE || 'missing';\n  requirement = data.REQUIRMENT || data.REQUIREMENT || 'missing';\n}\n\nconst aiInput = $('Edit Fields8').first().json.aiInput;\nconst senderId = $('Edit Fields8').first().json.senderId;\n\nconst memoryFlag = `Known lead info:\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nRequirement: ${requirement}`;\n\nreturn [\n  {\n    json: {\n      aiInput: aiInput,\n      sessionId: senderId,\n      memoryContext: memoryFlag\n    }\n  }\n];"
       },
-      "id": "97615266-58df-49bf-b276-8081b10bdfa0",
+      "id": "274e8e0b-91e3-442d-8454-413161536600",
       "name": "Load Memory Context",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2832,
-        2336
+        20944,
+        12016
       ]
     },
     {
@@ -121,10 +121,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        3648,
-        2448
+        21984,
+        12112
       ],
-      "id": "e8dce530-ee4d-474e-b02a-4271938ea989",
+      "id": "88081826-bc56-4593-919f-14db278138d1",
       "name": "Log to PendingFollowUps1",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -187,10 +187,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        3840,
-        2256
+        22160,
+        11936
       ],
-      "id": "d5134a8e-989b-4db3-99f3-939f0ea7d970",
+      "id": "0953f612-73bc-4411-9519-f5f6436b9805",
       "name": "Mark CONVERTED1",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -209,10 +209,10 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        2144,
-        2096
+        19968,
+        11696
       ],
-      "id": "ade26bcf-2b25-4a6f-aabd-cde1b135d64a",
+      "id": "5a1a69a2-fae2-466e-a1c6-4bb945e919c7",
       "name": "Webhook",
       "webhookId": "c62c59d4-5f54-4d92-a587-bbc794113da2"
     },
@@ -221,16 +221,16 @@
         "promptType": "define",
         "text": "={{ $json.aiInput }}",
         "options": {
-          "systemMessage": "=Name: Maya\n\nRole: Instagram DM assistant for Automa Ponix (AI automation agency).\nGoal: answer questions, guide conversation, capture qualified leads.\n\nTool\nKnowledge tool (official agency info only). Use only when needed.\n\nSESSION_ID = {{ $json.senderId || 'unknown' }}\n\nStyle\nReplies must be 1–2 short lines.\nClean spacing. No markdown. No bold.\nNever use ** or formatting symbols.\nMaximum 1 emoji if needed.\nUse lists when needed.\n\nTone\nConfident, friendly, lightly witty.\n\nRules\n• Always answer the user’s question first\n• Ask only one simple question at a time\n• Close conversation within 5 messages and thank politely\n• If asked about the agency use Knowledge tool\n\n{{ $json.memoryContext || '' }}\n\nLead Flow\nIf the user wants to proceed ask: Would you like our team to reach out?\nIf yes send: Please share: Name, Email, Phone, Requirement\n\nContact Extraction\nIf any field is missing ask ONLY for that field.\n\nFinal Response\nAfter confirmation return ONLY this JSON:\n{\n\"store_lead\": true,\n\"NAME\": \"\",\n\"EMAIL\": \"\",\n\"PHONE\": \"\",\n\"REQUIRMENT\": \"\",\n\"SESSION_ID\": \"{{ $json.senderId || 'unknown' }}\"\n}\nNever output JSON otherwise."
+          "systemMessage": "=your Name: Maya\n\nRole: Instagram DM assistant for Automa Ponix (AI automation agency).\nGoal: answer questions, guide conversation, capture qualified leads.\n\nTool\nKnowledge tool (official agency info only). Use only when needed.\n\nSESSION_ID = {{ $json.senderId || 'unknown' }}\n\nStyle\nReplies must be 1–2 short lines.\nClean spacing. No markdown. No bold.\nNever use ** or formatting symbols.\nMaximum 1 emoji if needed.\nUse lists when needed.\n\nTone\nConfident, friendly, lightly witty.\n\nRules\n• Always answer the user’s question first\n• Ask only one simple question at a time\n• Close conversation within 5 messages and thank politely\n• If asked about the agency use Knowledge tool\n\n{{ $json.memoryContext || '' }}\n\nLead Flow\nIf the user wants to proceed ask: Would you like our team to reach out?\nIf yes send: Please share: Name, Email, Phone, Requirement\n\nContact Extraction\nIf any field is missing ask ONLY for that field.\n\nFinal Response\nAfter confirmation return ONLY this JSON:\n{\n\"store_lead\": true,\n\"NAME\": \"\",\n\"EMAIL\": \"\",\n\"PHONE\": \"\",\n\"REQUIRMENT\": \"\",\n\"SESSION_ID\": \"{{ $json.senderId || 'unknown' }}\"\n}\nNever output JSON otherwise."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        2992,
-        2336
+        21104,
+        12016
       ],
-      "id": "7b6f4145-57ba-4081-95a9-560312227015",
+      "id": "5cd89613-07ab-41e8-a207-d11cb4546126",
       "name": "AI Agent",
       "retryOnFail": true
     },
@@ -259,10 +259,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        3900,
-        2448
+        21792,
+        12112
       ],
-      "id": "7b1ab44e-8c8d-4e7c-b7c2-73e1d46a1334",
+      "id": "38b9854b-e7c0-4a38-bbfc-2f46e238ba87",
       "name": "HTTP Request"
     },
     {
@@ -274,10 +274,10 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.5,
       "position": [
-        2544,
-        1936
+        20656,
+        11616
       ],
-      "id": "d4eca8c6-5d6a-436f-8111-694833477c05",
+      "id": "391c39aa-564f-4eae-b2dd-44fdbab65eda",
       "name": "Respond to Webhook"
     },
     {
@@ -316,10 +316,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        2336,
-        1952
+        20448,
+        11632
       ],
-      "id": "a0b1e64f-7e9a-47ef-89ae-50bdb3213d9e",
+      "id": "f33c9b11-576d-46b1-92c3-6ea73721e8e2",
       "name": "If"
     },
     {
@@ -331,10 +331,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        2336,
-        2192
+        20448,
+        11872
       ],
-      "id": "3a1cad85-6fb4-46b6-a339-5f79685afe6f",
+      "id": "8f7a74b5-5769-46e6-8ffb-8e72b4aba6cc",
       "name": "Switch"
     },
     {
@@ -348,10 +348,10 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        2816,
-        2064
+        20928,
+        11744
       ],
-      "id": "38445d83-4e17-4641-b941-f12b7ce26f85",
+      "id": "8e935472-f8cc-44f7-b2b4-39dcbd6363dd",
       "name": "AI Agent4"
     },
     {
@@ -381,10 +381,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        3104,
-        2064
+        21216,
+        11744
       ],
-      "id": "e513fe95-6376-4f5f-a97c-bac5765b7466",
+      "id": "e21fdd06-c0df-4612-9cab-e8eb4ba55cf8",
       "name": "HTTP Request6"
     },
     {
@@ -396,10 +396,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2624,
-        2064
+        20736,
+        11744
       ],
-      "id": "e68b5987-4aa7-452c-ba47-90d4ff731f7b",
+      "id": "6bd73322-8d2a-43ab-a043-0b8057fe7914",
       "name": "Edit Fields"
     },
     {
@@ -411,10 +411,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2464,
-        2384
+        20624,
+        12016
       ],
-      "id": "6d9d24a9-dbf7-4309-a1e4-46fc8ff10847",
+      "id": "24ba78fb-1200-4208-a6ab-5f056f7e9f67",
       "name": "Edit Fields8"
     },
     {
@@ -428,10 +428,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
       "typeVersion": 1,
       "position": [
-        2720,
-        2544
+        20928,
+        11904
       ],
-      "id": "68b25da4-2492-4c59-a5f8-6eb1d1abd402",
+      "id": "c511e0b4-5034-4414-b728-2780c5ed1cae",
       "name": "Groq Chat Model",
       "credentials": {
         "groqApi": {
@@ -455,10 +455,10 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        2864,
-        2720
+        21152,
+        12368
       ],
-      "id": "73957f6c-9569-4dfa-b5f8-056edd2aed46",
+      "id": "268af6c9-e656-4ab7-b39c-f4bfcb416de3",
       "name": "Download file",
       "credentials": {
         "googleDriveOAuth2Api": {
@@ -474,10 +474,10 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
       "typeVersion": 1,
       "position": [
-        3008,
-        2880
+        21296,
+        12528
       ],
-      "id": "b8056496-dddd-4a70-830d-97d738a54170",
+      "id": "4163b177-3619-46b4-bd23-0a4bcd45dc4b",
       "name": "Embeddings Google Gemini",
       "credentials": {
         "googlePalmApi": {
@@ -496,10 +496,10 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        3120,
-        2880
+        21408,
+        12528
       ],
-      "id": "da7da297-d8fd-46db-afa1-00e6e1cf635a",
+      "id": "42c75bf6-538c-45f8-87ab-2479c5243739",
       "name": "Default Data Loader"
     },
     {
@@ -510,10 +510,10 @@
       "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
       "typeVersion": 1,
       "position": [
-        3120,
-        3008
+        21408,
+        12656
       ],
-      "id": "5e26edea-4e6a-437c-8822-23a3a4b035d3",
+      "id": "930d375c-e679-4d98-a628-d210ef46b7a6",
       "name": "Recursive Character Text Splitter"
     },
     {
@@ -531,10 +531,10 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
       "typeVersion": 1.3,
       "position": [
-        3008,
-        2720
+        21296,
+        12368
       ],
-      "id": "8bc17206-542e-4989-b4da-57d650e99dab",
+      "id": "282d03a4-ef17-4538-a4d4-03c0e6cd3674",
       "name": "Pinecone Vector Store",
       "credentials": {
         "pineconeApi": {
@@ -559,10 +559,10 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
       "typeVersion": 1.3,
       "position": [
-        3008,
-        2544
+        21296,
+        12208
       ],
-      "id": "f5e99203-c7d7-45ca-823b-fc4ea7f6920b",
+      "id": "d06ab027-d0da-43a5-9d8f-0d2e54ff2c61",
       "name": "Pinecone Vector Store4",
       "credentials": {
         "pineconeApi": {
@@ -600,10 +600,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        3460,
-        2336
+        21584,
+        12016
       ],
-      "id": "9abd829e-291a-4108-8520-2c2b57dae2d5",
+      "id": "1be33c03-d5d4-48ad-98e0-6e7d897445ce",
       "name": "If4"
     },
     {
@@ -653,10 +653,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        3472,
-        2256
+        21792,
+        11936
       ],
-      "id": "6f5820bc-65ab-465b-a54f-8a7012db0e98",
+      "id": "b87abc99-92d9-44c0-969c-3ef785aedd49",
       "name": "Edit Fields9"
     },
     {
@@ -684,10 +684,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        4160,
-        2256
+        22480,
+        11936
       ],
-      "id": "e79265cd-2d71-4c66-b6aa-fc0c8a340308",
+      "id": "69e51b5d-956f-4553-8c3f-c52f88c18fca",
       "name": "HTTP Request7"
     },
     {
@@ -707,10 +707,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        4000,
-        2256
+        22320,
+        11936
       ],
-      "id": "02b6e294-12bb-40c1-807b-2244887ec974",
+      "id": "5a1bdc7d-f2bf-4ec2-b711-6afb8d002962",
       "name": "Edit Fields10"
     },
     {
@@ -808,10 +808,10 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        3664,
-        2256
+        21984,
+        11936
       ],
-      "id": "afca939d-ebdb-429f-83bd-25a43159d2d0",
+      "id": "2154f2bc-27d5-4819-bf9d-5dc21ed2ae22",
       "name": "Append or update row in sheet",
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -831,10 +831,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
       "typeVersion": 1,
       "position": [
-        2816,
-        2544
+        21104,
+        12208
       ],
-      "id": "2b7b1b5f-9ab6-4a26-a5c1-bc959af2e3ee",
+      "id": "627ffc58-3edb-4da3-9aba-49df085f9131",
       "name": "Mistral Cloud Chat Model",
       "credentials": {
         "mistralCloudApi": {
@@ -857,11 +857,11 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        3344,
-        2064
+        21456,
+        11744
       ],
       "name": "Every 30 Minutes",
-      "id": "b883ebb6-54b9-44c4-90f7-ea241b4b2001"
+      "id": "0b139a47-b1d0-43b0-84df-660a1c7daff0"
     },
     {
       "parameters": {
@@ -884,11 +884,11 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        3584,
-        2064
+        21696,
+        11744
       ],
       "name": "Get Pending Leads",
-      "id": "5f682026-b819-4687-8efd-73a8197127d3",
+      "id": "528a0eb8-ee68-4115-a0ee-0193bdeff112",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "2dvuvMpwQe7b0sGm",
@@ -903,11 +903,11 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3824,
-        2064
+        21936,
+        11744
       ],
       "name": "Filter 4hr+ No Conversion",
-      "id": "adda9037-b2f0-4810-9e77-f72b0fa5ec93"
+      "id": "0996a4aa-0b1d-4801-8426-d0637f112737"
     },
     {
       "parameters": {
@@ -936,11 +936,11 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        4064,
-        2064
+        22176,
+        11744
       ],
       "name": "Any Due Follow-ups?",
-      "id": "42102338-478e-49a3-a8ba-05a7665fbc60"
+      "id": "ba9c0c32-4c48-4b9d-b766-f004c6a20e07"
     },
     {
       "parameters": {
@@ -963,11 +963,11 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        4304,
-        2064
+        22416,
+        11744
       ],
       "name": "Send Follow-up DM",
-      "id": "623ca18d-ea0c-4e14-b973-6a26e18dc410"
+      "id": "d37a7419-7883-4a6a-bd49-9e4379fd3218"
     },
     {
       "parameters": {
@@ -1075,11 +1075,11 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
-        4544,
-        2064
+        22656,
+        11744
       ],
       "name": "Mark Follow-up Sent2",
-      "id": "449288fe-2b1c-48b9-840c-bc49e89f9884",
+      "id": "387d60b1-c118-4471-9796-5f3cbd5e9127",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "2dvuvMpwQe7b0sGm",
@@ -1088,32 +1088,69 @@
       }
     },
     {
-      "parameters": {
-        "sessionId": "={{ $json.senderId || $json.commentId || $json['SESSION_ID'] || 'default' }}",
-        "contextWindowLength": 5
-      },
-      "id": "uuid-mem-kderzvomm",
+      "parameters": {},
+      "id": "1bab1a5d-4e45-4213-ba12-be9953291c96",
       "name": "Window Buffer Memory 1",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.2,
       "position": [
-        2992,
-        2536
+        21200,
+        12208
       ]
     },
     {
-      "parameters": {
-        "sessionId": "={{ $json.senderId || $json.commentId || $json['SESSION_ID'] || 'default' }}",
-        "contextWindowLength": 5
-      },
-      "id": "uuid-mem-ng52hzg67",
+      "parameters": {},
+      "id": "fa979722-728d-4cf6-a6a3-6be26651b5a4",
       "name": "Window Buffer Memory 2",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.2,
       "position": [
-        2816,
-        2264
+        21024,
+        11904
       ]
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 2,
+        "output": "={{ \n$json.body.entry?.[0]?.changes?.[0]?.value?.metadata?.instagram_business_account_id === \"17841480583774715\" \n? 0 \n: 1 \n}}"
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        20032,
+        11904
+      ],
+      "id": "b878b3a2-951f-4909-985f-848f08bc9431",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "pzKGoiSxKgK9WpRv",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/pzKGoiSxKgK9WpRv",
+          "cachedResultName": "veetile_vandi"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        20272,
+        12016
+      ],
+      "id": "bd9d540a-abbe-4872-97aa-c2004239f4ab",
+      "name": "Call 'veetile_vandi'"
     }
   ],
   "connections": {
@@ -1122,6 +1159,17 @@
         [
           {
             "node": "Load Memory Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Memory Context": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           }
@@ -1150,7 +1198,7 @@
         ],
         [
           {
-            "node": "Switch",
+            "node": "Switch1",
             "type": "main",
             "index": 0
           }
@@ -1434,17 +1482,6 @@
         ]
       ]
     },
-    "Load Memory Context": {
-      "main": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Window Buffer Memory 1": {
       "ai_memory": [
         [
@@ -1462,6 +1499,24 @@
           {
             "node": "AI Agent4",
             "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'veetile_vandi'",
+            "type": "main",
             "index": 0
           }
         ]
