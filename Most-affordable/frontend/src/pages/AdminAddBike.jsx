@@ -140,10 +140,7 @@ const AdminAddBike = ({ isAdmin }) => {
 
         // Send Instagram DM via n8n webhook (if session_id exists)
         if (req.session_id) {
-          const webhookUrl = 'https://YOUR-N8N-DOMAIN/webhook/inform-requester';
-        // ☝️ Import n8n-inform-webhook.json into n8n, activate it, then
-        // replace YOUR-N8N-DOMAIN with your actual n8n domain.
-        // Example: 'https://shibu.app.n8n.cloud/webhook/inform-requester'
+          const webhookUrl = 'https://shhabas.app.n8n.cloud/webhook/inform-requester';
           const message = `🎉 Great news! The bike you requested (${addedBike.make} ${addedBike.model} ${addedBike.year}) is now available!\n\nView it here: https://your-site.com/bike/${addedBike.id}\n\nRef: ${req.session_id}`;
           try {
             await fetch(webhookUrl, {

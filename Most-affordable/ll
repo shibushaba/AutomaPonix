@@ -1,5 +1,0 @@
-sender_id | status | bike_searched | bike_requested | contact | source | timestamp
-
-Open n8n → Import from file → select n8n-inform-webhook.json → Save + Activate
-Click the Webhook node → copy the Production URL
-In AdminAddBike.jsx line 120, replace YOUR-N8N-DOMAIN with your actual n8n domain
