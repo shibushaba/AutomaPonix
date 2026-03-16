@@ -4,13 +4,13 @@
       "parameters": {
         "sessionKey": "={{ $sessionId }}"
       },
-      "id": "6c7d8400-334c-45f5-b25d-7bd7317e2982",
+      "id": "488aaf6e-3690-498c-b7ae-a1d4142f49c8",
       "name": "Window Buffer Memory1",
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1,
       "position": [
-        -16,
-        336
+        -912,
+        224
       ]
     },
     {
@@ -18,29 +18,29 @@
         "promptType": "define",
         "text": "={{ $json.aiInput }}",
         "options": {
-          "systemMessage": "System:\nYou are a classic and standard AI assistant for a premium bike dealership. You maintain conversation with the user to help them find a bike.\nYour goal is to either find a specific bike by ID (e.g. BK-1) OR save a general request (e.g. 'Himalayan 450') if they don't have an ID.\n\nCRITICAL PROCESS FOR SAVING REQUESTS:\n1. If a user asks for a general bike (e.g. 'Is a Himalayan available?'), you MUST first ask them for their phone number to reach them at.\n2. Once they provide their phone number, you MUST ask for final confirmation (e.g. 'You need a Himalayan 450 and your number is 9876543210, is this correct?').\n3. ONLY save the request when they explicitly say yes/confirm.\n\nYou MUST ALWAYS and ONLY respond with a valid JSON object in this exact format. No markdown, no backticks, no other text:\n{\n  \"reply_to_user\": \"Your conversational reply here\",\n  \"action\": \"none\" | \"search_db\" | \"save_request\",\n  \"action_param\": \"bike_id or formatted_request_string\"\n}\n\nRules:\n- If user provides a bike ID (e.g. BK-123), set action to 'search_db', action_param to 'BK-123', reply_to_user to 'Searching'.\n- If user confirms a general request with their number, set action to 'save_request', action_param to EXACTLY '[Bike Name] - Ph: [Phone Number]', reply_to_user to 'Your request for a [Bike] has been saved and our dealership team will reach out to you shortly!'\n- Otherwise, set action to 'none', action_param to '', and set reply_to_user to your conversational response (e.g. asking for the phone number, confirming the details). Use max ONE emoji total."
+          "systemMessage": "System:\nYou are a classic and standard AI assistant for a premium bike dealership. You maintain conversation with the user to help them find a bike.\nYour goal is to either find a specific bike by ID (e.g. BK-1) OR save a general request (e.g. 'Himalayan 450') if they don't have an ID.\n\nCRITICAL PROCESS FOR SAVING REQUESTS:\n1. If a user asks for a general bike (e.g. 'Is a Himalayan available?'), you MUST first ask them for their phone number to reach them at.\n2. Once they provide their phone number, you MUST ask for final confirmation (e.g. 'You need a Himalayan 450 and your number is 9876543210, is this correct?').\n3. ONLY save the request when they explicitly say yes/confirm.\n\nYou MUST ALWAYS and ONLY respond with a valid JSON object in this exact format. No markdown, no backticks, no other text:\n{\n  \"reply_to_user\": \"Your conversational reply here\",\n  \"action\": \"none\" | \"search_db\" | \"save_request\",\n  \"action_param\": \"bike_id or formatted_request_string\"\n}\n\nRules:\n- Never use ** or formatting symbols, and no bolding.\n- If user provides a bike ID (e.g. BK-123), set action to 'search_db', action_param to 'BK-123', reply_to_user to 'Searching'.\n- If user confirms a general request with their number, set action to 'save_request', action_param to EXACTLY '[Bike Name] - Ph: [Phone Number]', reply_to_user to 'Your request for a [Bike] has been saved and our dealership team will reach out to you shortly!'\n- Otherwise, set action to 'none', action_param to '', and set reply_to_user to your conversational response (e.g. asking for the phone number, confirming the details). Use max ONE emoji total."
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
       "position": [
-        -112,
-        192
+        -1008,
+        80
       ],
-      "id": "4acfb766-cc50-4578-a1df-ec90b44927a7",
+      "id": "7563b441-0b14-45f4-a322-eb34d79c5c89",
       "name": "AI Agent1"
     },
     {
       "parameters": {
         "jsCode": "try {\n  let str = $input.item.json.output || $input.item.json.text || $input.item.json.response || '';\n  str = str.replace(/```json/ig, '').replace(/```/g, '').trim();\n  const parsed = JSON.parse(str);\n  return [parsed];\n} catch(e) {\n  return [{ reply_to_user: \"I'm sorry, I misunderstood. Could you rephrase that?\", action: \"none\", action_param: \"\" }];\n}"
       },
-      "id": "70d47faa-df14-410e-9ccf-6abc3c4a2c75",
+      "id": "18de9041-914a-4684-971c-2b1afaba66a9",
       "name": "Parse JSON Output1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        224,
-        192
+        -672,
+        80
       ]
     },
     {
@@ -71,10 +71,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        448,
-        192
+        -448,
+        80
       ],
-      "id": "91f2ef0e-c727-4c40-b001-1757bc1dfcb1",
+      "id": "5695fb07-84f6-4486-a542-9df5fe6beaeb",
       "name": "If Search DB1"
     },
     {
@@ -105,10 +105,10 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        720,
-        368
+        -176,
+        256
       ],
-      "id": "b58b00ca-463c-440f-87a0-f7c471ba2dbd",
+      "id": "00dad7c1-f363-41aa-b4da-6ef51d43d795",
       "name": "If Save Request1"
     },
     {
@@ -126,13 +126,13 @@
           ]
         }
       },
-      "id": "6bdd9410-9e73-45ce-9172-2cc34bfb39bb",
+      "id": "517b14c3-9611-4ee9-b331-95cb225ff8f0",
       "name": "Supabase Fetch1",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        720,
-        -16
+        -176,
+        -128
       ],
       "alwaysOutputData": true,
       "credentials": {
@@ -146,26 +146,26 @@
       "parameters": {
         "prompt": "=System:\nYou are a classic AI assistant for a premium bike dealership. Use max ONE emoji.\nIf Database Result contains an available bike:\nList its details EXACTLY in this format:\nBrand : [Make]\nModel : [Model]\nPrice : ₹[Price]\nColor : [Color]\nYear : [Year]\nKM : [KM]\nThen, politely provide the direct website link to view photos: https://most-affordable.vercel.app/bike/[THE_BIKE_ID].\nEnd your message with: 'Checkout our website for more details and to request vehicles: https://most-affordable.vercel.app/'\n\nIf Database Result is empty or the bike is SOLD:\nApologize politely, explain it is not available, and invite them to browse vehicles on https://most-affordable.vercel.app/.\n======\nDatabase Search Result: {{ JSON.stringify($json) }}"
       },
-      "id": "e214ded4-2cec-43b9-bfcc-bbde16d17448",
+      "id": "e42ae949-94b8-4567-b434-77980304d06a",
       "name": "Format DB Result1",
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1,
       "position": [
-        896,
-        -16
+        0,
+        -128
       ]
     },
     {
       "parameters": {
         "jsCode": "return { output: $input.item.json.text || $input.item.json.output || 'Processing Error: AI did not return text.' };"
       },
-      "id": "354e2e38-b18b-4e1e-81b0-7633d9dad03a",
+      "id": "7fb02dae-e42c-431d-a89d-62b6cb87b0fe",
       "name": "Format DB Output UI1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1232,
-        -16
+        336,
+        -128
       ]
     },
     {
@@ -204,13 +204,13 @@
           ]
         }
       },
-      "id": "b4b9cd85-1152-4319-a059-1d6d5f524129",
+      "id": "407581dd-59cd-42ce-b4d2-db4e5fecd87b",
       "name": "Supabase Insert Request1",
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        960,
-        272
+        64,
+        160
       ],
       "credentials": {
         "supabaseApi": {
@@ -223,26 +223,26 @@
       "parameters": {
         "jsCode": "const reply = $('Parse JSON Output1').item.json.reply_to_user || 'Your request has been saved!';\nreturn { output: reply + '\\n\\n✅ Checkout our website for more details and to request vehicles:\\nhttps://most-affordable.vercel.app/' };"
       },
-      "id": "c486e042-6ea3-4845-8748-037288e8ab6c",
+      "id": "00e9a76f-0741-40e3-9173-24206af004e9",
       "name": "Format Save Output UI1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1168,
-        272
+        272,
+        160
       ]
     },
     {
       "parameters": {
         "jsCode": "return { output: $('Parse JSON Output1').item.json.reply_to_user || 'Something went wrong.' };"
       },
-      "id": "d4e09d77-0a12-4c08-9080-3a558a40ac29",
+      "id": "3bd97f35-c20b-4df4-8c01-8fcd330f78e7",
       "name": "Format Normal Output UI1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
-        480
+        64,
+        368
       ]
     },
     {
@@ -270,10 +270,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        1760,
-        176
+        864,
+        64
       ],
-      "id": "bd02b1e3-85f2-44da-b222-e9218fadc646",
+      "id": "95651396-20ef-481c-9ba6-6f336f7367b8",
       "name": "HTTP Request1"
     },
     {
@@ -285,10 +285,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -928,
-        96
+        -1824,
+        -16
       ],
-      "id": "e52c4436-95f8-4aa0-804a-3bd6d1d6f48b",
+      "id": "695078ec-9793-4db1-bc42-0040f6746b34",
       "name": "Edit Fields"
     },
     {
@@ -300,10 +300,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        -1168,
-        80
+        -2064,
+        -32
       ],
-      "id": "3248f1d7-f43e-4f15-b03a-0b56d82bb59b",
+      "id": "af54e692-773d-4cfa-8eed-bc3ba893f252",
       "name": "Switch"
     },
     {
@@ -313,10 +313,10 @@
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1.1,
       "position": [
-        -1344,
-        96
+        -2240,
+        -16
       ],
-      "id": "68863e20-73e7-4d28-a84f-fa75a5660d25",
+      "id": "f1838929-7bdb-4ab3-8dbf-27c6ce681ec3",
       "name": "When Executed by Another Workflow"
     },
     {
@@ -345,13 +345,13 @@
         },
         "options": {}
       },
-      "id": "f45eec04-c9a5-4f1f-8b57-518ddc06b7d5",
+      "id": "90677b50-a4f7-4682-8eaf-ec227e04fc9d",
       "name": "Sheets - Read User",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.4,
       "position": [
-        -736,
-        96
+        -1632,
+        -16
       ],
       "alwaysOutputData": true,
       "credentials": {
@@ -363,15 +363,15 @@
     },
     {
       "parameters": {
-        "jsCode": "let sheetRow = {};\ntry { sheetRow = $input.item.json || {}; } catch(e) {}\n\nconst senderId = $('Edit Fields').item.json.senderId;\nconst rawMsg = $('Edit Fields').item.json.aiInput;\nconst isDone = sheetRow.status === 'done';\n\nlet aiInput = rawMsg;\nif (sheetRow.sender_id && !isDone) {\n  let ctx = '';\n  if (sheetRow.bike_searched) ctx += `User previously searched for bike: ${sheetRow.bike_searched}. `;\n  if (sheetRow.bike_requested) ctx += `User previously requested bike: ${sheetRow.bike_requested}. `;\n  if (ctx) aiInput = `[Context: ${ctx}]\\nUser message: ${rawMsg}`;\n}\n\nreturn [{ senderId, aiInput, isDone: isDone.toString(), sheetRow }];"
+        "jsCode": "let sheetRow = {};\ntry { sheetRow = $input.item.json || {}; } catch(e) {}\n\nconst senderId = $('Edit Fields').item.json.senderId;\nconst rawMsg = $('Edit Fields').item.json.aiInput;\n\n// If message contains a BK-ID, let the full flow handle it even if 'done'\nconst hasBikeId = /\\bBK-\\d+\\b/i.test(rawMsg);\nconst isDone = sheetRow.status === 'done' && !hasBikeId;\n\nlet aiInput = rawMsg;\nif (sheetRow.sender_id && !isDone) {\n  let ctx = '';\n  if (sheetRow.bike_searched) ctx += `User previously searched for bike: ${sheetRow.bike_searched}. `;\n  if (sheetRow.bike_requested) ctx += `User previously requested bike: ${sheetRow.bike_requested}. `;\n  if (ctx) aiInput = `[Context: ${ctx}]\\nUser message: ${rawMsg}`;\n}\n\nreturn [{ senderId, aiInput, isDone: isDone.toString(), sheetRow }];"
       },
-      "id": "30f2ca03-1d22-432e-a39b-37f61cd307fe",
+      "id": "e6e27632-7755-4d47-96e4-3edf359696ad",
       "name": "Build AI Context",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -528,
-        96
+        -1424,
+        -16
       ]
     },
     {
@@ -399,26 +399,26 @@
         },
         "options": {}
       },
-      "id": "6153753d-2df0-45ef-9f69-912b2e8101a5",
+      "id": "c0c9627e-0a4c-4c58-91af-a9ec7e72181d",
       "name": "Is Bot Done?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        -304,
-        96
+        -1200,
+        -16
       ]
     },
     {
       "parameters": {
-        "jsCode": "return { output: '✅ Your request was already handled!\\n\\nCheckout our website for more details and to browse all bikes or request a vehicle:\\nhttps://most-affordable.vercel.app/' };"
+        "jsCode": "return { output: \"Welcome back! 👋 Your previous request has been handled.\\n\\nIf you have a new Bike ID to check (e.g. BK-1, BK-23), just send it here and I'll look it up for you!\\n\\nFor a new bike request, please visit our website:\\nhttps://most-affordable.vercel.app/request\" };"
       },
-      "id": "8e32a13e-79d3-4ac2-aa6c-5602353f9791",
+      "id": "ce803a04-f6e4-43ff-9fb0-1a104fcc2a03",
       "name": "Send Website Msg (Done)",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -96,
-        0
+        -992,
+        -112
       ]
     },
     {
@@ -525,13 +525,13 @@
         },
         "options": {}
       },
-      "id": "769d6c3e-d48b-42e4-a68f-d4e9e8ab5411",
+      "id": "793f16ac-55e9-4b71-b1d4-b44a8e96b3f3",
       "name": "Sheets - Write Bike Found",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.4,
       "position": [
-        1424,
-        -16
+        528,
+        -128
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -645,13 +645,13 @@
         },
         "options": {}
       },
-      "id": "d031e0b2-1684-432e-9f5f-a7a6a3e5d88f",
+      "id": "905d89f2-d6c0-419c-81fa-d9807e727428",
       "name": "Sheets - Write Req Saved",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.4,
       "position": [
-        1408,
-        272
+        512,
+        160
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -667,13 +667,13 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "cee7c90e-bac8-4aad-9e1e-352db2831dda",
+      "id": "a33dfe83-3a94-43fe-b59d-103326dbef8d",
       "name": "Webhook - Inform Trigger",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -1344,
-        272
+        -2240,
+        160
       ],
       "webhookId": "inform-requester"
     },
@@ -699,13 +699,13 @@
           }
         }
       },
-      "id": "b0d830b2-efaf-4a2d-a8a5-807b7743775f",
+      "id": "07bd4408-e923-49ac-8f36-70f893480d78",
       "name": "Send Instagram DM",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -1104,
-        272
+        -2000,
+        160
       ]
     },
     {
@@ -714,13 +714,13 @@
         "responseBody": "={ \"success\": true, \"instagram_id\": $('Webhook - Inform Trigger').item.json.body.instagram_id }",
         "options": {}
       },
-      "id": "64ffce16-8446-481a-904b-647077c2f53c",
+      "id": "e11e3bb6-9a80-4580-a380-9e778785c56d",
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        -864,
-        272
+        -1760,
+        160
       ]
     },
     {
@@ -731,10 +731,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
       "typeVersion": 1,
       "position": [
-        -112,
-        336
+        -1008,
+        224
       ],
-      "id": "c3c6de6d-e9ca-4e1c-847a-09592feca8eb",
+      "id": "297f863e-0028-45e9-801c-b3b21afa3591",
       "name": "Mistral Cloud Chat Model",
       "credentials": {
         "mistralCloudApi": {
@@ -751,10 +751,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
       "typeVersion": 1,
       "position": [
-        896,
-        144
+        0,
+        32
       ],
-      "id": "e2e6f579-dd10-4169-995d-031451f7ed33",
+      "id": "12f0a941-2747-46ad-b663-17bba404cda1",
       "name": "Mistral Cloud Chat Model1",
       "credentials": {
         "mistralCloudApi": {
