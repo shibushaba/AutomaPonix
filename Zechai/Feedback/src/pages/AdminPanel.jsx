@@ -467,14 +467,23 @@ ${customers.map((c) => `- ${c.name}: ${c.stars}★, ordered: ${c.item_ordered}, 
 STAFF DATA (${staff.length} reports):
 ${staff.map((s) => `- ${s.name}: day rating ${s.day_stars}★, complaints: "${s.complaints}", feedback: "${s.feedback}"`).join('\n') || 'No staff reports today.'}`;
 
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-          });
-          const json = await res.json();
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey.trim()}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+            });
+            const json = await res.json();
             if (!res.ok) {
               aiError = json?.error?.message || `API Error: ${res.status}`;
+              // Debug: fetch available models
+              try {
+                const modelsRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${geminiKey.trim()}`);
+                const mJson = await modelsRes.json();
+                if (mJson.models) {
+                  const supported = mJson.models.filter(m => m.supportedGenerationMethods.includes('generateContent')).map(m => m.name.replace('models/', '')).join(', ');
+                  aiError += `\n\nYour API key supports these models: ${supported}`;
+                }
+              } catch (_) { /* ignore */ }
             } else {
               aiParagraph = json?.candidates?.[0]?.content?.parts?.[0]?.text || null;
               if (aiParagraph) {
