@@ -166,12 +166,13 @@ function CustomerTab() {
 function StaffTab() {
   const [rows, setRows]       = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null); // staff profile
-  const [markVal, setMarkVal] = useState('');
-  const [markNote, setMarkNote] = useState('');
-  const [savingMark, setSavingMark] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [markInput, setMarkInput] = useState(10);
+  const [markNote, setMarkNote]   = useState('');
   const [dateFilter, setDateFilter] = useState('');
   const [achievements, setAchievements] = useState([]);
+  const [marks, setMarks]         = useState([]);
+  const [todayMark, setTodayMark] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -198,17 +199,39 @@ function StaffTab() {
     setAchievements(data || []);
   };
 
-  const openProfile = (staff) => { setSelected(staff); setMarkVal(''); setMarkNote(''); loadAchievements(staff.phone); };
+  const openProfile = async (staff) => {
+    setSelected(staff);
+    setMarkInput(10);
+    setMarkNote('');
+    loadAchievements(staff.phone);
+    
+    // Fetch their marks
+    const { data: mData } = await supabase.from('staff_marks')
+        .select('*')
+        .or(`staff_phone.eq.${staff.phone},staff_name.eq.${staff.name}`)
+        .order('date', { ascending: false });
+    
+    const localDateStr = new Date().toISOString().slice(0, 10);
+    const tm = mData?.find(m => m.date === localDateStr);
+    
+    setMarks(mData || []);
+    setTodayMark(tm || null);
+  };
 
-  const saveMark = async () => {
-    const m = parseInt(markVal);
-    if (isNaN(m) || m < 0 || m > 10) { toast.error('Enter a mark between 0 and 10.'); return; }
-    setSavingMark(true);
-    const { error } = await supabase.from('staff_marks').insert([{
-      staff_name: selected.name, staff_phone: selected.phone, mark: m, admin_note: markNote,
-    }]);
-    setSavingMark(false);
-    if (error) { toast.error('Failed to save.'); } else { toast.success('Mark saved!'); setMarkVal(''); setMarkNote(''); }
+  const assignMark = async (staff, m) => {
+    toast.loading('Saving mark...', { id: 'mark' });
+    const { data, error } = await supabase.from('staff_marks').insert([{
+      staff_name: staff.name, staff_phone: staff.phone, mark: m, admin_note: markNote,
+    }]).select();
+    if (!error) {
+      toast.success('Mark assigned!', { id: 'mark' });
+      setMarkInput(10);
+      setMarkNote('');
+      if (data && data[0]) {
+        setMarks([data[0], ...marks]);
+        setTodayMark(data[0]);
+      }
+    } else toast.error('Failed to assign mark', { id: 'mark' });
   };
 
   const awardBestStaff = async (staff) => {
@@ -218,12 +241,6 @@ function StaffTab() {
       month: now.getMonth() + 1, year: now.getFullYear(), title: 'Best Staff of the Month',
     }]);
     if (error) toast.error('Failed to award.'); else { toast.success(`🏆 Awarded to ${staff.name}!`); loadAchievements(staff.phone); }
-  };
-
-  const avgMark = async (phone) => {
-    const { data } = await supabase.from('staff_marks').select('mark').eq('staff_phone', phone || '');
-    if (!data || data.length === 0) return '—';
-    return (data.reduce((a, r) => a + r.mark, 0) / data.length).toFixed(1);
   };
 
   const avgStars = (reports) => {
@@ -323,15 +340,22 @@ function StaffTab() {
 
           {/* Assign mark */}
           <div className="border-t border-ink pt-4">
-            <p className="form-label mb-2">Assign Today's Mark (0–10)</p>
-            <div className="flex gap-2">
-              <input type="number" min={0} max={10} value={markVal} onChange={(e) => setMarkVal(e.target.value)}
-                className="form-input flex-1 text-center font-black text-lg" placeholder="—" />
-              <button onClick={saveMark} disabled={savingMark} className="btn btn-sm border-ink hover:bg-ink hover:text-white">
-                {savingMark ? '...' : 'Save'}
-              </button>
-            </div>
-            <input className="form-input mt-2 text-xs" placeholder="Admin note (optional)" value={markNote} onChange={(e) => setMarkNote(e.target.value)} />
+            <p className="form-label mb-2">Assign Today's Mark (0-10)</p>
+            {todayMark ? (
+              <div className="border border-green-600 bg-green-50 p-4 mb-4">
+                <p className="font-mono text-[11px] text-green-700 font-bold uppercase">✓ Mark Saved Today</p>
+                <p className="font-black text-2xl text-green-800">{todayMark.mark}<span className="text-sm opacity-50">/10</span></p>
+                {todayMark.admin_note && <p className="font-mono text-[10px] text-green-700 mt-2 px-2 py-1 bg-white border border-green-200">Note: {todayMark.admin_note}</p>}
+              </div>
+            ) : (
+              <div className="space-y-2 mb-4">
+                <div className="flex gap-2">
+                  <input type="number" min="0" max="10" className="form-input flex-1 text-center font-black text-xl" value={markInput} onChange={(e) => setMarkInput(Number(e.target.value))} />
+                  <button onClick={() => assignMark(selected, markInput)} className="btn bg-white">Save</button>
+                </div>
+                <input type="text" placeholder="Admin note (optional)" className="form-input text-xs" value={markNote} onChange={(e) => setMarkNote(e.target.value)} />
+              </div>
+            )}
           </div>
 
           {/* Best Staff Award */}
@@ -356,6 +380,24 @@ function StaffTab() {
               ))}
             </div>
           </div>
+
+          {/* Past Marks */}
+          {marks.length > 0 && (
+            <div className="border-t border-ink pt-4 mt-6">
+              <p className="form-label mb-2">Recent Marks</p>
+              <div className="space-y-2">
+                {marks.slice(0, 5).map((m, i) => (
+                  <div key={i} className="flex justify-between items-center bg-gray-50 border border-ink px-3 py-2">
+                    <div>
+                      <p className="font-mono text-[10px] text-ink">{m.date}</p>
+                      {m.admin_note && <p className="font-mono text-[9px] text-gray-500 truncate max-w-[150px]">Note: {m.admin_note}</p>}
+                    </div>
+                    <span className="font-black text-sm">{m.mark}/10</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="border-t border-ink pt-4 mt-6">
             <button onClick={() => wipeStaff(selected)} className="w-full font-mono text-[10px] uppercase text-primary border border-primary border-dashed p-3 hover:bg-primary hover:text-white transition-colors">
@@ -425,7 +467,7 @@ ${customers.map((c) => `- ${c.name}: ${c.stars}★, ordered: ${c.item_ordered}, 
 STAFF DATA (${staff.length} reports):
 ${staff.map((s) => `- ${s.name}: day rating ${s.day_stars}★, complaints: "${s.complaints}", feedback: "${s.feedback}"`).join('\n') || 'No staff reports today.'}`;
 
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiKey}`, {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
