@@ -48,6 +48,14 @@ export default function CustomerFeedback() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.stars === 0) { toast.error('Please select a rating.'); return; }
+    
+    // Strict validation
+    if (!form.name.trim()) { toast.error('Name is mandatory.'); return; }
+    if (!form.phone.trim()) { toast.error('Phone number is mandatory.'); return; }
+    if (!form.item_ordered.trim()) { toast.error('Item Ordered is mandatory.'); return; }
+    if (!form.feedback_msg.trim()) { toast.error('Feedback message is mandatory.'); return; }
+    if (!form.suggestion.trim()) { toast.error('Suggestion is mandatory.'); return; }
+
     setLoading(true);
     const { error } = await supabase.from('customer_feedback').insert([{
       name: form.name, phone: form.phone, stars: form.stars,
@@ -111,7 +119,7 @@ export default function CustomerFeedback() {
             <div className="grid grid-cols-2 gap-4">
               <FormInput id="name" label="Your Name" required placeholder="Alex..." value={form.name} onChange={handle('name')} />
               <div>
-                <FormInput id="phone" label="Phone Number" type="tel" placeholder="+91 99999 99999" value={form.phone} onChange={handle('phone')} />
+                <FormInput id="phone" label="Phone Number" required type="tel" placeholder="+91 99999 99999" value={form.phone} onChange={handle('phone')} />
                 {checkingPhone && <p className="font-mono text-[9px] text-gray-400 mt-1">Checking...</p>}
               </div>
             </div>
@@ -128,8 +136,8 @@ export default function CustomerFeedback() {
               )}
             </div>
 
-            <FormInput id="feedback_msg" label="Your Feedback" textarea rows={3} placeholder="Tell us about your experience..." value={form.feedback_msg} onChange={handle('feedback_msg')} />
-            <FormInput id="suggestion" label="Suggestions" textarea rows={2} placeholder="What can we improve?" value={form.suggestion} onChange={handle('suggestion')} />
+            <FormInput id="feedback_msg" label="Your Feedback" required textarea rows={3} placeholder="Tell us about your experience..." value={form.feedback_msg} onChange={handle('feedback_msg')} />
+            <FormInput id="suggestion" label="Suggestions" required textarea rows={2} placeholder="What can we improve?" value={form.suggestion} onChange={handle('suggestion')} />
 
             <button type="submit" disabled={loading} className="btn-primary w-full mt-3 py-4 text-sm">
               {loading ? 'Submitting...' : '→ Submit Feedback'}

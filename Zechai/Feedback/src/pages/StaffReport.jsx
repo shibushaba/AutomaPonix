@@ -42,6 +42,15 @@ export default function StaffReport() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.day_stars === 0) { toast.error('Please rate your day.'); return; }
+    
+    // Strict validation
+    if (!form.name.trim()) { toast.error('Name is mandatory.'); return; }
+    if (!form.phone.trim()) { toast.error('Phone is mandatory.'); return; }
+    if (!form.complaints.trim()) { toast.error('Complaints field is mandatory (write "None" if none).'); return; }
+    if (!form.feedback.trim()) { toast.error('Feedback is mandatory.'); return; }
+    if (!form.suggestions.trim()) { toast.error('Suggestions are mandatory (write "None" if none).'); return; }
+    if (!form.others.trim()) { toast.error('Others is mandatory (write "None" if none).'); return; }
+
     setLoading(true);
     const { error } = await supabase.from('staff_reports').insert([{
       name: form.name, phone: form.phone, day_stars: form.day_stars,
@@ -135,10 +144,10 @@ export default function StaffReport() {
               )}
             </div>
 
-            <FormInput id="complaints" label="Complaints / Issues Today?" textarea rows={3} placeholder="Equipment issues, customer incidents..." value={form.complaints} onChange={handle('complaints')} />
-            <FormInput id="staff-feedback" label="General Feedback" textarea rows={3} placeholder="Thoughts on today's operations..." value={form.feedback} onChange={handle('feedback')} />
-            <FormInput id="suggestions" label="Suggestions for Improvement" textarea rows={2} placeholder="Ideas to make things better..." value={form.suggestions} onChange={handle('suggestions')} />
-            <FormInput id="others" label="Anything Else?" textarea rows={2} placeholder="Any other notes..." value={form.others} onChange={handle('others')} />
+            <FormInput id="complaints" label="Complaints / Issues Today?" required textarea rows={3} placeholder="Equipment issues, customer incidents... (write 'None' if none)" value={form.complaints} onChange={handle('complaints')} />
+            <FormInput id="staff-feedback" label="General Feedback" required textarea rows={3} placeholder="Thoughts on today's operations..." value={form.feedback} onChange={handle('feedback')} />
+            <FormInput id="suggestions" label="Suggestions for Improvement" required textarea rows={2} placeholder="Ideas to make things better... (write 'None' if none)" value={form.suggestions} onChange={handle('suggestions')} />
+            <FormInput id="others" label="Anything Else?" required textarea rows={2} placeholder="Any other notes... (write 'None' if none)" value={form.others} onChange={handle('others')} />
 
             <button type="submit" disabled={loading} className="btn-accent w-full mt-3 py-4 text-sm">
               {loading ? 'Submitting...' : '→ Submit Daily Report'}

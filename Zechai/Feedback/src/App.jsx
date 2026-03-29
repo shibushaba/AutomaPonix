@@ -1,5 +1,7 @@
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import Home             from './pages/Home';
+import CustomerQR       from './pages/CustomerQR';
+import StaffQR          from './pages/StaffQR';
 import CustomerFeedback from './pages/CustomerFeedback';
 import StaffReport      from './pages/StaffReport';
 import AdminLogin       from './pages/AdminLogin';
@@ -11,6 +13,8 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route path="/"            element={<Home />} />
+        <Route path="/qr-customer" element={<CustomerQR />} />
+        <Route path="/qr-staff"    element={<StaffQR />} />
         <Route path="/customer"    element={<CustomerFeedback />} />
         <Route path="/staff"       element={<StaffReport />} />
         <Route path="/admin-login" element={<AdminLogin />} />
