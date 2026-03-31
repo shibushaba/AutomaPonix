@@ -55,12 +55,20 @@ export default function Home() {
             <p className="font-mono text-[11px] mt-2 opacity-60">Full-screen QR for back-of-house or staff desk</p>
           </Link>
 
-          <Link
-            to="/admin-login"
-            className="block border-2 border-ink bg-white p-4 text-center hover:bg-ink hover:text-white transition-colors mt-12"
-          >
-            <p className="font-mono text-xs uppercase tracking-widest font-bold">Manager Admin Panel</p>
-          </Link>
+          <div className="grid grid-cols-2 gap-4 mt-12">
+            <Link
+              to="/login"
+              className="block border-2 border-ink bg-white p-4 text-center hover:bg-ink hover:text-white transition-colors"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-widest font-bold">Manager / Staff Login</p>
+            </Link>
+            <Link
+              to="/admin-login"
+              className="block border-2 border-ink bg-white p-4 text-center hover:bg-ink hover:text-white transition-colors"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-widest font-bold">HQ Master Override</p>
+            </Link>
+          </div>
         </div>
       </main>
       

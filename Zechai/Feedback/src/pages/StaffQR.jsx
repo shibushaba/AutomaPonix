@@ -2,7 +2,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { Link } from 'react-router-dom';
 
 const BASE = window.location.origin + window.location.pathname.replace(/\/?$/, '');
-const STAFF_URL = `${BASE}/#/staff`;
+const STAFF_URL = `${BASE}/#/login`;
 
 export default function StaffQR() {
   return (

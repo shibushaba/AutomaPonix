@@ -5,9 +5,14 @@ import FormInput from '../components/FormInput';
 import Confetti from '../components/Confetti';
 import toast, { Toaster } from 'react-hot-toast';
 
+import { useSearchParams } from 'react-router-dom';
+
 const INITIAL = { name: '', phone: '', stars: 0, feedback_msg: '', item_ordered: '', suggestion: '' };
 
 export default function CustomerFeedback() {
+  const [searchParams] = useSearchParams();
+  const outletId = searchParams.get('outlet_id') || searchParams.get('outlet');
+
   const [form, setForm] = useState(INITIAL);
   const [loading, setLoading]     = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -50,17 +55,22 @@ export default function CustomerFeedback() {
     if (form.stars === 0) { toast.error('Please select a rating.'); return; }
     
     // Strict validation
-    if (!form.name.trim()) { toast.error('Name is mandatory.'); return; }
-    if (!form.phone.trim()) { toast.error('Phone number is mandatory.'); return; }
     if (!form.item_ordered.trim()) { toast.error('Item Ordered is mandatory.'); return; }
     if (!form.feedback_msg.trim()) { toast.error('Feedback message is mandatory.'); return; }
     if (!form.suggestion.trim()) { toast.error('Suggestion is mandatory.'); return; }
 
     setLoading(true);
-    const { error } = await supabase.from('customer_feedback').insert([{
-      name: form.name, phone: form.phone, stars: form.stars,
-      feedback_msg: form.feedback_msg, item_ordered: form.item_ordered, suggestion: form.suggestion,
-    }]);
+    const payload = {
+      name: form.name.trim() || 'Anonymous', 
+      phone: form.phone.trim() || null, 
+      stars: form.stars,
+      feedback_msg: form.feedback_msg, 
+      item_ordered: form.item_ordered, 
+      suggestion: form.suggestion,
+    };
+    if (outletId) payload.outlet_id = outletId;
+
+    const { error } = await supabase.from('customer_feedback').insert([payload]);
     setLoading(false);
     if (error) { toast.error('Something went wrong. Please try again.'); console.error(error); }
     else setSubmitted(true);
@@ -116,14 +126,6 @@ export default function CustomerFeedback() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
-              <FormInput id="name" label="Your Name" required placeholder="Alex..." value={form.name} onChange={handle('name')} />
-              <div>
-                <FormInput id="phone" label="Phone Number" required type="tel" placeholder="+91 99999 99999" value={form.phone} onChange={handle('phone')} />
-                {checkingPhone && <p className="font-mono text-[9px] text-gray-400 mt-1">Checking...</p>}
-              </div>
-            </div>
-
             <FormInput id="item_ordered" label="Item(s) Ordered" required placeholder="e.g. Caramel Latte, Croissant..." value={form.item_ordered} onChange={handle('item_ordered')} />
 
             <div className="border border-ink p-4 bg-white">
@@ -138,6 +140,17 @@ export default function CustomerFeedback() {
 
             <FormInput id="feedback_msg" label="Your Feedback" required textarea rows={3} placeholder="Tell us about your experience..." value={form.feedback_msg} onChange={handle('feedback_msg')} />
             <FormInput id="suggestion" label="Suggestions" required textarea rows={2} placeholder="What can we improve?" value={form.suggestion} onChange={handle('suggestion')} />
+
+            <div className="mt-8 pt-6 border-t border-ink border-dashed">
+              <p className="section-label mb-4">[ Optional Caller ID ]</p>
+              <div className="grid grid-cols-2 gap-4">
+                <FormInput id="name" label="Your Name (Optional)" placeholder="Alex..." value={form.name} onChange={handle('name')} />
+                <div>
+                  <FormInput id="phone" label="Phone (Optional)" type="tel" placeholder="+91 999 999 999" value={form.phone} onChange={handle('phone')} />
+                  {checkingPhone && <p className="font-mono text-[9px] text-gray-400 mt-1">Checking...</p>}
+                </div>
+              </div>
+            </div>
 
             <button type="submit" disabled={loading} className="btn-primary w-full mt-3 py-4 text-sm">
               {loading ? 'Submitting...' : '→ Submit Feedback'}
