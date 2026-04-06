@@ -9,6 +9,7 @@ import AdminPanel       from './pages/AdminPanel';
 import AdminGuard       from './components/AdminGuard';
 import Login            from './pages/Login';
 import ManagerPanel     from './pages/ManagerPanel';
+import SharedReport     from './pages/SharedReport';
 
 export default function App() {
   return (
@@ -23,6 +24,8 @@ export default function App() {
         <Route path="/manager"     element={<ManagerPanel />} />
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin"       element={<AdminGuard><AdminPanel /></AdminGuard>} />
+        <Route path="/share/daily/:outletId/:date" element={<SharedReport />} />
+        <Route path="/share/master/:id" element={<SharedReport />} />
       </Routes>
     </HashRouter>
   );

@@ -82,3 +82,4 @@ CREATE POLICY "Allow public access" ON outlet_staff FOR ALL USING (true) WITH CH
 CREATE POLICY "Allow public access" ON master_reports FOR ALL USING (true) WITH CHECK (true);
 
 -- Done! The database is now Franchise-Ready.
+  

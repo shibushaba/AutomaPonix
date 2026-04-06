@@ -404,8 +404,16 @@ REPORT GUIDELINES:
                         <span className="font-mono text-xs text-accent">{expandedReport === r.report_date ? '▲ Collapse' : '▼ Read'}</span>
                       </button>
                       {expandedReport === r.report_date && (
-                        <div className="border-t border-muted px-4 py-4 prose prose-sm font-mono max-w-none prose-headings:font-black prose-headings:uppercase prose-p:text-[11px]">
-                          <ReactMarkdown>{r.ai_content}</ReactMarkdown>
+                        <div className="border-t border-muted">
+                          <div className="flex bg-gray-100 p-2 justify-end border-b border-muted">
+                            <a href={`#/share/daily/${selectedOutlet.id}/${r.report_date}`} target="_blank" rel="noopener noreferrer"
+                               className="text-[10px] font-bold text-primary hover:text-red-700 uppercase tracking-widest px-3 py-1 border border-primary transition-colors">
+                              Share / Export PDF
+                            </a>
+                          </div>
+                          <div className="px-4 py-4 prose prose-sm font-mono max-w-none prose-headings:font-black prose-headings:uppercase prose-p:text-[11px]">
+                            <ReactMarkdown>{r.ai_content}</ReactMarkdown>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -503,8 +511,16 @@ REPORT GUIDELINES:
                           </div>
                         </button>
                         {expandedReport === r.id && (
-                          <div className="border-t border-muted p-4 bg-paper prose prose-sm font-mono max-w-none prose-p:text-[10px] prose-headings:text-[11px] prose-headings:uppercase prose-headings:font-black">
-                            <ReactMarkdown>{r.ai_content}</ReactMarkdown>
+                          <div className="border-t border-muted">
+                            <div className="flex bg-gray-100 p-2 justify-end border-b border-muted">
+                              <a href={`#/share/master/${r.id}`} target="_blank" rel="noopener noreferrer"
+                                 className="text-[10px] font-bold text-primary hover:text-red-700 uppercase tracking-widest px-3 py-1 border border-primary transition-colors">
+                                Share / Export PDF
+                              </a>
+                            </div>
+                            <div className="p-4 bg-paper prose prose-sm font-mono max-w-none prose-p:text-[10px] prose-headings:text-[11px] prose-headings:uppercase prose-headings:font-black">
+                              <ReactMarkdown>{r.ai_content}</ReactMarkdown>
+                            </div>
                           </div>
                         )}
                       </div>

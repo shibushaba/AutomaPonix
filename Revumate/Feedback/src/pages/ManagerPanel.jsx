@@ -487,15 +487,7 @@ Be direct and factual. Only use the data provided. Do not fabricate or hallucina
             {viewingReportDate ? (
               <div className="space-y-6 max-w-4xl">
                 <div className="flex justify-between items-center mb-4">
-                  <button onClick={() => setViewingReportDate(null)}
-                    className="font-mono text-xs uppercase tracking-widest text-gray-500 hover:text-ink flex items-center gap-2">
-                    ← Back to Reports List
-                  </button>
                   <button 
-                    onClick={() => {
-                        const report = allDailyReports.find(r => r.report_date === viewingReportDate);
-                        if (report) handleDeleteReport(report).then(() => setViewingReportDate(null));
-                    }}
                     className="text-[10px] font-bold text-red-500 border border-red-200 px-3 py-1.5 uppercase tracking-widest hover:bg-red-50"
                   >
                     ✕ Delete Report

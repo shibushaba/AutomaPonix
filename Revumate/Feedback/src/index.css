@@ -128,4 +128,16 @@ h1, h2, h3 {
   .badge-accent  { color: #2596be; border-color: #2596be; }
   .badge-ink     { color: #f2f2f0; background-color: #0a0a0a; border-color: #0a0a0a; }
   .badge-success { color: #16a34a; border-color: #16a34a; }
+
+  /* ── Print Styles for PDF Export ── */
+  @media print {
+    body {
+      background-color: white !important;
+      color: black !important;
+    }
+    .no-print {
+      display: none !important;
+    }
+    @page { margin: 15mm; }
+  }
 }
