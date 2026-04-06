@@ -195,7 +195,7 @@ export default function AdminPanel() {
 - Staff Suggestions: ${managerRpt?.suggestions || 'None'}`;
       }).join('\n\n');
 
-      const prompt = `You are the High-Command Intelligence Officer for Zechai. Write a ${type.toUpperCase()} Master Strategic report for the period starting ${startStr.split('T')[0]}.
+      const prompt = `You are the High-Command Intelligence Officer for Revumate. Write a ${type.toUpperCase()} Master Strategic report for the period starting ${startStr.split('T')[0]}.
 
 GLOBAL DATA SUMMARY:
 Total Customers: ${cData?.length || 0}
@@ -246,7 +246,7 @@ REPORT GUIDELINES:
     }
   };
 
-  const handleLogout = () => { localStorage.removeItem('zechai_admin'); navigate('/admin-login'); };
+  const handleLogout = () => { localStorage.removeItem('revumate_admin'); navigate('/admin-login'); };
 
   return (
     <div className="min-h-screen flex flex-col bg-paper text-ink font-mono">
@@ -259,7 +259,7 @@ REPORT GUIDELINES:
             HQ
           </div>
           <div>
-            <h1 className="font-black text-xl tracking-tighter uppercase leading-none">ZECHAI NETWORK</h1>
+            <h1 className="font-black text-xl tracking-tighter uppercase leading-none">REVUMATE NETWORK</h1>
             <p className="text-[10px] tracking-widest text-primary uppercase font-bold mt-0.5">Master Override Enabled</p>
           </div>
         </div>

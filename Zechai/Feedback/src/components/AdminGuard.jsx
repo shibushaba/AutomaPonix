@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 
-const ADMIN_KEY = 'zechai_admin_session';
+const ADMIN_KEY = 'revumate_admin_session';
 
 export function loginAdmin() {
   localStorage.setItem(ADMIN_KEY, 'true');

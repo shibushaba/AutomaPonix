@@ -1,5 +1,5 @@
 -- ============================================================
--- ZECHAI Cafe Feedback System — Supabase Schema (v2)
+-- REVUMATE Cafe Feedback System — Supabase Schema (v2)
 -- Run ALL of this in the Supabase SQL Editor
 -- ============================================================
 

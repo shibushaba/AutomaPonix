@@ -25,7 +25,7 @@ export default function Login() {
         .maybeSingle();
 
       if (outletData) {
-        localStorage.setItem('zechai_user', JSON.stringify({
+        localStorage.setItem('revumate_user', JSON.stringify({
           role: 'manager',
           outlet_id: outletData.id,
           name: outletData.manager_name,
@@ -45,7 +45,7 @@ export default function Login() {
         .maybeSingle();
 
       if (staffData) {
-        localStorage.setItem('zechai_user', JSON.stringify({
+        localStorage.setItem('revumate_user', JSON.stringify({
           role: staffData.role,
           id: staffData.id,
           outlet_id: staffData.outlet_id,

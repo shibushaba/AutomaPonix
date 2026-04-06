@@ -9,7 +9,7 @@ const isConfigured =
 
 if (!isConfigured) {
   console.warn(
-    '[ZECHAI] Supabase not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.'
+    '[REVUMATE] Supabase not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.'
   );
 }
 

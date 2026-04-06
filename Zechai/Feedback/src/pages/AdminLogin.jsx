@@ -34,7 +34,7 @@ export default function AdminLogin() {
             <span className="text-white font-black text-lg tracking-widest">Z</span>
           </div>
           <p className="section-label mb-1">[ Admin Access ]</p>
-          <h1 className="text-3xl font-black uppercase">ZECHAI<br/>ADMIN</h1>
+          <h1 className="text-3xl font-black uppercase">REVUMATE<br/>ADMIN</h1>
         </div>
 
         <form onSubmit={handleSubmit} className="border border-ink bg-white p-6 space-y-4">
@@ -69,7 +69,7 @@ export default function AdminLogin() {
         </form>
 
         <p className="font-mono text-[9px] text-gray-400 text-center mt-4 tracking-widest">
-          RESTRICTED ACCESS · ZECHAI INTERNAL
+          RESTRICTED ACCESS · REVUMATE INTERNAL
         </p>
       </div>
     </div>

@@ -1,5 +1,5 @@
 -- ============================================================
--- ZECHAI Cafe Feedback System — Supabase Migration (v3)
+-- REVUMATE Cafe Feedback System — Supabase Migration (v3)
 -- Run this completely in the Supabase SQL Editor
 -- WARNING: This creates the Enterprise Multi-Outlet structure
 -- ============================================================
@@ -52,7 +52,7 @@ BEGIN
   -- Insert a default Head Quarters outlet if no outlets exist
   IF NOT EXISTS (SELECT 1 FROM outlets) THEN
     INSERT INTO outlets (name, manager_name, manager_phone)
-    VALUES ('Zechai HQ', 'Master Admin', '0000000000')
+    VALUES ('Revumate HQ', 'Master Admin', '0000000000')
     RETURNING id INTO hq_id;
   ELSE
     SELECT id INTO hq_id FROM outlets LIMIT 1;

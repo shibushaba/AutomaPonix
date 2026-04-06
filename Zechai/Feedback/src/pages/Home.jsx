@@ -10,7 +10,7 @@ export default function Home() {
             <span className="text-white font-black text-sm tracking-widest">Z</span>
           </div>
           <div>
-            <p className="font-black text-sm tracking-[0.3em] uppercase text-ink">ZECHAI</p>
+            <p className="font-black text-sm tracking-[0.3em] uppercase text-ink">REVUMATE</p>
             <p className="font-mono text-[9px] tracking-widest text-gray-400 uppercase">Cafe · Est. 2024</p>
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function Home() {
       </main>
       
       <footer className="border-t border-ink bg-white px-8 py-4 flex justify-between">
-        <p className="font-mono text-[9px] text-gray-400 tracking-widest uppercase">© {new Date().getFullYear()} ZECHAI</p>
+        <p className="font-mono text-[9px] text-gray-400 tracking-widest uppercase">© {new Date().getFullYear()} REVUMATE</p>
         <p className="font-mono text-[9px] text-gray-400 tracking-widest uppercase">All rights reserved</p>
       </footer>
     </div>

@@ -43,7 +43,7 @@ export default function ManagerPanel() {
   const todayLabel = new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   useEffect(() => {
-    const raw = localStorage.getItem('zechai_user');
+    const raw = localStorage.getItem('revumate_user');
     if (!raw) { navigate('/login'); return; }
     const p = JSON.parse(raw);
     if (p.role !== 'manager') { toast.error('Access Denied'); navigate('/login'); return; }
@@ -191,7 +191,7 @@ export default function ManagerPanel() {
       const staffSummaries = staff?.filter(s => !s.is_manager_report).map(s => `${s.name} (${s.day_stars}/5): ${s.feedback}${s.complaints && s.complaints !== 'None' ? ' | Issue: ' + s.complaints : ''}`).join('\n') || 'No staff reports';
       const managerReport = staff?.find(s => s.is_manager_report);
 
-      const prompt = `You are the Outlet Manager at ZECHAI cafe. Write a detailed, sharp executive summary of today's operations.
+      const prompt = `You are the Outlet Manager at REVUMATE cafe. Write a detailed, sharp executive summary of today's operations.
 
 CUSTOMER DATA:
 - Total Customers: ${customers?.length || 0}
@@ -245,7 +245,7 @@ Be direct and factual. Only use the data provided. Do not fabricate or hallucina
     }
   };
 
-  const handleLogout = () => { localStorage.removeItem('zechai_user'); navigate('/login'); };
+  const handleLogout = () => { localStorage.removeItem('revumate_user'); navigate('/login'); };
 
   if (!manager) return null;
 

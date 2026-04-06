@@ -23,7 +23,7 @@ export default function StaffReport() {
   const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   useEffect(() => {
-    const raw = localStorage.getItem('zechai_user');
+    const raw = localStorage.getItem('revumate_user');
     if (!raw) { navigate('/login'); return; }
     
     const parsed = JSON.parse(raw);
@@ -96,7 +96,7 @@ export default function StaffReport() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('zechai_user');
+    localStorage.removeItem('revumate_user');
     navigate('/login');
   };
 
@@ -113,7 +113,7 @@ export default function StaffReport() {
             <span className="text-white font-black text-xs">Z</span>
           </div>
           <div>
-            <p className="font-black text-xs tracking-[0.3em] uppercase">ZECHAI</p>
+            <p className="font-black text-xs tracking-[0.3em] uppercase">REVUMATE</p>
             <p className="font-mono text-[9px] tracking-widest text-gray-400 uppercase">Staff Daily Report</p>
           </div>
         </div>
@@ -215,7 +215,7 @@ export default function StaffReport() {
         </div>
       </main>
       <footer className="border-t border-ink bg-white px-6 py-3 text-center">
-        <p className="font-mono text-[9px] tracking-widest text-gray-400 uppercase">ZECHAI © {new Date().getFullYear()}</p>
+        <p className="font-mono text-[9px] tracking-widest text-gray-400 uppercase">REVUMATE © {new Date().getFullYear()}</p>
       </footer>
     </div>
   );

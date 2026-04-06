@@ -90,7 +90,7 @@ export default function CustomerFeedback() {
             <span className="text-white font-black text-xs">Z</span>
           </div>
           <div>
-            <p className="font-black text-xs tracking-[0.3em] uppercase">ZECHAI</p>
+            <p className="font-black text-xs tracking-[0.3em] uppercase">REVUMATE</p>
             <p className="font-mono text-[9px] tracking-widest text-gray-400 uppercase">Customer Feedback</p>
           </div>
         </div>
@@ -160,7 +160,7 @@ export default function CustomerFeedback() {
       </main>
 
       <footer className="border-t border-ink bg-white px-6 py-3 text-center">
-        <p className="font-mono text-[9px] tracking-widest text-gray-400 uppercase">ZECHAI © {new Date().getFullYear()}</p>
+        <p className="font-mono text-[9px] tracking-widest text-gray-400 uppercase">REVUMATE © {new Date().getFullYear()}</p>
       </footer>
     </div>
   );
