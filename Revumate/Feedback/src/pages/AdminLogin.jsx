@@ -17,8 +17,10 @@ export default function AdminLogin() {
     e.preventDefault();
     setLoading(true);
     setTimeout(() => {
-      const isLegacyAdmin = creds.username === ADMIN_USER && creds.password === ADMIN_PASS;
-      const isNewAdmin = creds.username === ADMIN_USER_2 && creds.password === ADMIN_PASS_2;
+      const u = creds.username.trim();
+      const p = creds.password.trim();
+      const isLegacyAdmin = u === ADMIN_USER && p === ADMIN_PASS;
+      const isNewAdmin = u === ADMIN_USER_2 && p === ADMIN_PASS_2;
       
       if (isLegacyAdmin || isNewAdmin) {
         loginAdmin();
